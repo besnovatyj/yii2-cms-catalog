@@ -1,0 +1,17 @@
+{
+    "name": "catalog-showcase-assets",
+    "version": "1.0.0",
+    "description": "Assets for Catalog Showcase management",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "node esbuild.config.js",
+        "watch": "node esbuild.config.js --watch",
+        "clean": "rm -rf dist"
+    },
+    "license": "UNLICENSED",
+    "devDependencies": {
+        "esbuild": "^0.25.4",
+        "typescript": "^5.7.3"
+    }
+}
