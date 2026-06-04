@@ -7,7 +7,7 @@
 
 use Besnovatyj\Catalog\entities\Category;
 use Besnovatyj\Catalog\forms\backend\CategoryForm;
-use Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget;
+use Besnovatyj\File\widgets\CkeditorCustomWidget;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;

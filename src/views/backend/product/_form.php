@@ -41,7 +41,7 @@ use yii\web\View;
             $editorConfig = [];
             $editorConfig['language'] = 'ru';
             $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Products/' . $product->id;
-            echo $form->field($model, 'description')->widget(\Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget::class, $editorConfig);
+            echo $form->field($model, 'description')->widget(\Besnovatyj\File\widgets\CkeditorCustomWidget::class, $editorConfig);
         }
         ?>
 
@@ -53,7 +53,7 @@ use yii\web\View;
             $editorConfig = [];
             $editorConfig['language'] = 'ru';
             $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Products/' . $product->id;
-            echo $form->field($model, 'description_short')->widget(\Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget::class, $editorConfig);
+            echo $form->field($model, 'description_short')->widget(\Besnovatyj\File\widgets\CkeditorCustomWidget::class, $editorConfig);
         }
         ?>
     </div>
