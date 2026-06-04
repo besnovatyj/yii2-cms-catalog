@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = 'Update';
             // TODO создавать папку при создании. При удалении удалять.
             $editorConfig = [];
             $editorConfig['language'] = 'ru';
-            $editorConfig['fmDefaultPath'] = '/origin/Catalog/Categories/' . $model->nodeId;
+            $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Categories/' . $model->nodeId;
             echo $form->field($model, 'description')->widget(CkeditorCustomWidget::class, $editorConfig);
         }
         ?>

@@ -40,7 +40,7 @@ use yii\web\View;
             // TODO создавать папку при создании. При удалении удалять.
             $editorConfig = [];
             $editorConfig['language'] = 'ru';
-            $editorConfig['fmDefaultPath'] = '/origin/Catalog/Products/' . $product->id;
+            $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Products/' . $product->id;
             echo $form->field($model, 'description')->widget(\Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget::class, $editorConfig);
         }
         ?>
@@ -52,7 +52,7 @@ use yii\web\View;
             // TODO создавать папку при создании. При удалении удалять.
             $editorConfig = [];
             $editorConfig['language'] = 'ru';
-            $editorConfig['fmDefaultPath'] = '/origin/Catalog/Products/' . $product->id;
+            $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Products/' . $product->id;
             echo $form->field($model, 'description_short')->widget(\Besnovatyj\File\widgets\customeditor\src\CkeditorCustomWidget::class, $editorConfig);
         }
         ?>
