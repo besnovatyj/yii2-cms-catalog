@@ -7,7 +7,7 @@
 
 namespace Besnovatyj\Catalog\migrations;
 
-use common\components\migration\BaseMigration;
+use Besnovatyj\Kernel\migration\BaseMigration;
 use Yii;
 use yii\db\Exception;
 
@@ -159,9 +159,9 @@ class m250428_123100_create_catalog_foreign_key_constraints extends BaseMigratio
     public function safeDown(): void
     {
         // Отменяем действия по умолчанию,
-        // так как \common\components\migration\BaseMigration::safeDown() вызывает static::TABLE_NAME,
+        // так как \Besnovatyj\Kernel\migration\BaseMigration::safeDown() вызывает static::TABLE_NAME,
         // которого в данной миграции не существует.
-        // Так же, \common\components\migration\BaseMigration::safeDown() при удалении таблиц сам удалит у них все индексы и внешние ключи.
+        // Так же, \Besnovatyj\Kernel\migration\BaseMigration::safeDown() при удалении таблиц сам удалит у них все индексы и внешние ключи.
 
         // parent::safeDown();
     }
