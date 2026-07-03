@@ -20,10 +20,9 @@ use common\components\controller\ControllerTrait;
 use Exception;
 use Throwable;
 use Yii;
-use yii\base\ExitException;
-use yii\base\UnknownPropertyException;
 use yii\filters\VerbFilter;
 use yii\helpers\VarDumper;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -144,52 +143,46 @@ class ProductController extends Controller
     }
 
     /**
-     * @throws ExitException
+     * Ajax-сохранение отдельного поля товара (внешний виджет CKEditor, плагин autosave).
+     *
+     * Обработка ошибок делегирована {@see \yii\web\ErrorHandler}: клиентские ошибки — типизированный
+     * {@see BadRequestHttpException} (реальный HTTP 400 + сообщение); инфраструктурные исключения
+     * сервиса всплывают к ErrorHandler (в проде скрыты, в debug видны). Успех — конверт `{status:'success', ...}`.
+     *
+     * @throws BadRequestHttpException|NotFoundHttpException
      */
     public function actionAjaxSave(): array
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $response = ['status' => 'error'];
-
-        if (Yii::$app->request->isAjax) {
-            try {
-                // Сохраняемый контент
-                $content = Yii::$app->request->post('editor_content') ?: '';
-                // Идентификатор редактируемой сущности
-                $id = Yii::$app->request->post('model_id') ?: null;
-                // Название редактируемого поля сущности
-                $fieldName = Yii::$app->request->post('field_name') ?: null;
-
-                if (!empty($id) && !empty($fieldName)) {
-
-                    $product = $this->findModel((int)$id);
-
-                    if (!isset($product->$fieldName)) {
-                        throw new UnknownPropertyException('Trying to change non-existent property: ' . $fieldName);
-                    }
-
-                    $form = new ProductForm($product);
-
-                    if (($form->$fieldName = urldecode($content)) && $form->validate()) {
-                        $this->service->edit($product->id, $form);
-                    }
-
-                    $response['status'] = 'success';
-                    $response['message'] = 'Saved successfully!';
-                    return $response;
-
-                }
-
-                $response['status'] = 'error';
-                $response['message'] = 'SAVE NORMALLY BEFORE!';
-                return $response;
-
-            } catch (Exception $e) {
-                $this->ajaxError($e);
-            }
+        if (!Yii::$app->request->isAjax) {
+            throw new BadRequestHttpException('Ожидается AJAX-запрос.');
         }
 
-        return $response;
+        // Сохраняемый контент
+        $content = Yii::$app->request->post('editor_content') ?: '';
+        // Идентификатор редактируемой сущности
+        $id = Yii::$app->request->post('model_id') ?: null;
+        // Название редактируемого поля сущности
+        $fieldName = Yii::$app->request->post('field_name') ?: null;
+
+        if (empty($id) || empty($fieldName)) {
+            throw new BadRequestHttpException('SAVE NORMALLY BEFORE!');
+        }
+
+        $product = $this->findModel((int)$id);
+
+        if (!isset($product->$fieldName)) {
+            throw new BadRequestHttpException('Trying to change non-existent property: ' . $fieldName);
+        }
+
+        $form = new ProductForm($product);
+        $form->$fieldName = urldecode($content);
+        if (!$form->validate()) {
+            throw new BadRequestHttpException('Validation failed: ' . implode('; ', $form->getFirstErrors()));
+        }
+        $this->service->edit($product, $form);
+
+        return ['status' => 'success', 'message' => 'Saved successfully!'];
     }
 
 
