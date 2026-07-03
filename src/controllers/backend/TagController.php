@@ -11,7 +11,7 @@ use Besnovatyj\Catalog\services\TagManageService;
 use Besnovatyj\Catalog\entities\Tag;
 use Besnovatyj\Catalog\forms\backend\search\TagSearch;
 use Besnovatyj\Catalog\forms\backend\TagForm;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Exception;
 use Throwable;
 use Yii;

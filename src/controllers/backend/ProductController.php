@@ -16,7 +16,7 @@ use Besnovatyj\Catalog\image\PhotoImageOwner;
 use Besnovatyj\Catalog\repositories\ProductRepository;
 use Besnovatyj\Catalog\services\ProductManageService;
 use Besnovatyj\Images\helpers\ImageActionsMap;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Exception;
 use Throwable;
 use Yii;

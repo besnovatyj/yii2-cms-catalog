@@ -7,7 +7,7 @@
 
 namespace Besnovatyj\Catalog\controllers\backend;
 
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use DomainException;
 use Besnovatyj\Catalog\services\BrandManageService;
 use Besnovatyj\Catalog\entities\Brand;

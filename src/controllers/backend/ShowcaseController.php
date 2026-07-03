@@ -17,7 +17,7 @@ use Besnovatyj\Catalog\forms\backend\showcase\ShowcaseForm;
 use Besnovatyj\Catalog\forms\backend\showcase\ShowcaseItemForm;
 use Besnovatyj\Catalog\repositories\ShowcaseRepository;
 use Besnovatyj\Catalog\services\ShowcaseManageService;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Exception;
 use Throwable;
 use Yii;

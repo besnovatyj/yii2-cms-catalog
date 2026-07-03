@@ -11,7 +11,7 @@ use Besnovatyj\Catalog\forms\backend\CategoryForm;
 use Besnovatyj\Catalog\forms\backend\search\CategorySearch;
 use Besnovatyj\Catalog\repositories\CategoryRepository;
 use Besnovatyj\Catalog\services\CategorySimpleManageService;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Exception;
 use Yii;
 use yii\web\Controller;

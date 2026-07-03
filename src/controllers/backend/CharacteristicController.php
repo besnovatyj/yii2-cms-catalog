@@ -11,7 +11,7 @@ use Besnovatyj\Catalog\services\CharacteristicManageService;
 use Besnovatyj\Catalog\entities\Characteristic;
 use Besnovatyj\Catalog\forms\backend\CharacteristicForm;
 use Besnovatyj\Catalog\forms\backend\search\CharacteristicSearch;
-use common\components\controller\ControllerTrait;
+use Besnovatyj\Kernel\controller\ControllerTrait;
 use Exception;
 use Throwable;
 use Yii;
