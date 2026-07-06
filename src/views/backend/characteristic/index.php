@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'format' => 'boolean',
                 ],
                 ['class' => ActionColumn::class,
-                    'template' => \modules\user\components\Helper::filterActionColumn(['view', 'update', 'delete',]),
+                    'template' => \Besnovatyj\User\components\Helper::filterActionColumn(['view', 'update', 'delete',]),
                 ],
             ],
         ]); ?>
