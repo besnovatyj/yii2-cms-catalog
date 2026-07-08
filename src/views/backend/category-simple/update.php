@@ -7,7 +7,7 @@
 
 use Besnovatyj\Catalog\entities\Category;
 use Besnovatyj\Catalog\forms\backend\CategoryForm;
-use Besnovatyj\File\widgets\CkeditorCustomWidget;
+use Besnovatyj\Editor\EditorWidget;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = 'Update';
             $editorConfig = [];
             $editorConfig['language'] = 'ru';
             $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Categories/' . $model->nodeId;
-            echo $form->field($model, 'description')->widget(CkeditorCustomWidget::class, $editorConfig);
+            echo $form->field($model, 'description')->widget(EditorWidget::class, $editorConfig);
         }
         ?>
     </div>
