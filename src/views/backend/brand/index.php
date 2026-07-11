@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'slug',
                 ['class' => ActionColumn::class,
-                    'template' => \Besnovatyj\User\components\Helper::filterActionColumn(['view', 'update', 'delete',]),
+                    'template' => \Besnovatyj\Kernel\security\AccessHelper::filterActionColumn(['view', 'update', 'delete',]),
                 ],
             ],
         ]) ?>
