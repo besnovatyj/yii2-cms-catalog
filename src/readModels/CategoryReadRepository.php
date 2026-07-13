@@ -38,6 +38,19 @@ class CategoryReadRepository
         return Category::find()->andWhere(['slug' => $slug])->one();
     }
 
+    /**
+     * ЧПУ-путь категории: слаги предков (без виртуального корня depth=0) и самого узла через «/».
+     * Используется {@see \Besnovatyj\Catalog\urls\CategoryUrlRule} для разбора/генерации ЧПУ-адресов.
+     */
+    public function pathTo(Category $category): string
+    {
+        $nodes = $this->treeScope->parentsQuery($category, andSelf: true)
+            ->andWhere(['>', 'depth', 0])
+            ->all();
+
+        return implode('/', ArrayHelper::getColumn($nodes, 'slug'));
+    }
+
     public function getTreeWithSubsOf(?Category $category = null): array
     {
         $query = Category::find()->orderBy('lft');
