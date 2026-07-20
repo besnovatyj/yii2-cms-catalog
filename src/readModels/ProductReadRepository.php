@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -13,6 +12,7 @@ use Besnovatyj\Catalog\entities\product\Product;
 use Besnovatyj\Catalog\entities\product\Value;
 use Besnovatyj\Catalog\entities\Tag;
 use Besnovatyj\Catalog\forms\frontend\search\SearchForm;
+use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\data\ActiveDataProvider;
 use yii\data\DataProviderInterface;
 use yii\db\ActiveQuery;
@@ -20,6 +20,13 @@ use yii\helpers\ArrayHelper;
 
 class ProductReadRepository
 {
+    private TreeQueryScope $treeScope;
+
+    public function __construct()
+    {
+        $this->treeScope = new TreeQueryScope(Category::class);
+    }
+
     public function getAll(): DataProviderInterface
     {
         $query = Product::find()->alias('p')->active('p')->with('mainPhoto', 'values');
@@ -29,7 +36,7 @@ class ProductReadRepository
     public function getAllByCategory(Category $category): DataProviderInterface
     {
         $query = Product::find()->alias('p')->active('p')->with('mainPhoto', 'category');
-        $ids = ArrayHelper::merge([$category->id], $category->getDescendants()->select('id')->column());
+        $ids = $this->treeScope->descendantIds($category, andSelf: true);
         $query->joinWith(['categoryAssignments ca'], false);
         $query->andWhere(['or', ['p.category_id' => $ids], ['ca.category_id' => $ids]]);
         $query->groupBy('p.id');

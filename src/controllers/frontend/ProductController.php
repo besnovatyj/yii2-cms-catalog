@@ -31,19 +31,31 @@ class ProductController extends Controller
     }
 
     /**
-     * Список всех продуктов
+     * Выбираем вручную несколько категорий и выводим их описание и все их продукты
+     * TODO в следующей версии (yii2-cms.loc) или виджеты категорий или выбираем все корни категорий (в следующей версии работа с несколькими корнями гораздо удобнее).
+     * NB Текущая реализация не имеет права на существование :)
      * @return string
      */
-//    public function actionIndex(): string
-//    {
-//        $dataProvider = $this->products->getAll();
-//        $category = $this->categories->getRoot();
-//
-//        return $this->render('index', [
-//            'category' => $category,
-//            'dataProvider' => $dataProvider,
-//        ]);
-//    }
+    public function actionIndex(): string
+    {
+        $timsonCCategory = $this->categories->findBySlug('all-products');
+        $timsonCProductsProvider = $this->products->getAllByCategory($timsonCCategory);
+
+        $aoguCategory = $this->categories->findBySlug('aogu');
+        $aoguProductsProvider = $this->products->getAllByCategory($aoguCategory);
+
+        $haserveyCategory = $this->categories->findBySlug('haservey');
+        $haserveyProductsProvider = $this->products->getAllByCategory($haserveyCategory);
+
+        return $this->render('index', [
+            'timsonCCategory' => $timsonCCategory,
+            'timsonCProductsProvider' => $timsonCProductsProvider,
+            'aoguCategory' => $aoguCategory,
+            'aoguProductsProvider' => $aoguProductsProvider,
+            'haserveyCategory' => $haserveyCategory,
+            'haserveyProductsProvider' => $haserveyProductsProvider,
+        ]);
+    }
 
     /**
      * Список продуктов конкретной категории

@@ -51,6 +51,11 @@ class CategoryReadRepository
         return implode('/', ArrayHelper::getColumn($nodes, 'slug'));
     }
 
+    public function getRoot(): Category
+    {
+        return Category::find()->andWhere(['depth' => 0])->one();
+    }
+
     public function getTreeWithSubsOf(?Category $category = null): array
     {
         $query = Category::find()->orderBy('lft');
@@ -67,4 +72,5 @@ class CategoryReadRepository
 
         return $query->all();
     }
+
 }
