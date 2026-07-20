@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -24,7 +23,8 @@ use yii\widgets\DetailView;
 
 $urlManager = Yii::$app->get('frontendUrlManager'); // TODO
 
-$this->title = $product->name_short ?? $product->name;
+$this->title = html_entity_decode($product->name_short, ENT_QUOTES | ENT_HTML5, 'UTF-8')
+            ?? html_entity_decode($product->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $this->params['breadcrumbs'][] = ['label' => 'Products', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

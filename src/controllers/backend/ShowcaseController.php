@@ -365,7 +365,14 @@ class ShowcaseController extends Controller
             $query->andWhere(['not in', 'id', $existingProductIds]);
         }
 
-        return ArrayHelper::map($query->orderBy('name')->asArray()->all(), 'id', 'name');
+        return ArrayHelper::map($query->orderBy('name')->with('brand')->asArray()->all(), 'id', function (array $product) {
+            $brand = $product['brand']['name'];
+            $name = html_entity_decode($product['name_short'], ENT_QUOTES | ENT_HTML5, 'UTF-8')
+                ?? html_entity_decode($product['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $weight = (key_exists('weight', $product) && $product['weight'] > 0) ? ' (' . $product['weight'] . ')' : '';
+            return '(' . $brand . ') ' . $name . $weight;
+        }
+        );
     }
 
     /**
