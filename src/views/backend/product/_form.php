@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -46,18 +45,6 @@ use yii\web\View;
             echo $form->field($model, 'description')->widget(\Besnovatyj\Editor\EditorWidget::class, $editorConfig);
         }
         ?>
-
-        <?php
-        if (!isset($product)) {
-            echo '<div class="alert alert-danger" role="alert">Перед заполнением сохраните.</div>';
-        } else {
-            // TODO создавать папку при создании. При удалении удалять.
-            $editorConfig = [];
-            $editorConfig['language'] = 'ru';
-            $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Products/' . $product->id;
-            echo $form->field($model, 'description_short')->widget(\Besnovatyj\Editor\EditorWidget::class, $editorConfig);
-        }
-        ?>
     </div>
     <div class="card-footer">
         <div class="d-grid gap-2">
@@ -73,6 +60,29 @@ use yii\web\View;
             <div class="card-body">
                 <?= $form->field($model->categoriesForm, 'main')->dropDownList($model->categoriesForm->categoriesList(), ['prompt' => '']) ?>
                 <?= $form->field($model->categoriesForm, 'others')->checkboxList($model->categoriesForm->categoriesList()) ?>
+            </div>
+            <div class="card-footer">
+                <div class="d-grid gap-2">
+                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Short description</div>
+            <div class="card-body">
+                <?php
+                if (!isset($product)) {
+                    echo '<div class="alert alert-danger" role="alert">Перед заполнением сохраните.</div>';
+                } else {
+                    // TODO создавать папку при создании. При удалении удалять.
+                    $editorConfig = [];
+                    $editorConfig['language'] = 'ru';
+                    $editorConfig['fmDefaultPath'] = '/static/origin/Catalog/Products/' . $product->id;
+                    echo $form->field($model, 'description_short')->widget(\Besnovatyj\Editor\EditorWidget::class, $editorConfig);
+                }
+                ?>
             </div>
             <div class="card-footer">
                 <div class="d-grid gap-2">
