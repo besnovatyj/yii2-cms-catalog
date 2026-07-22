@@ -21,7 +21,6 @@ interface ShowcaseConfig {
     };
     csrfToken: string;
     csrfParam: string;
-    characteristics: Array<{ slug: string; name: string }>;
 }
 
 interface ShowcaseItemData {
@@ -30,8 +29,8 @@ interface ShowcaseItemData {
     product_name: string;
     product_name_short: string;
     photo_index: number | null;
-    display_characteristics: string[];
-    custom_title: string | null;
+    title_source: string | null;
+    description_source: string | null;
     sort: number;
     status: number;
     photos: Array<{ index: number; thumb: string; isMain: boolean }>;
@@ -270,30 +269,27 @@ class ShowcaseManager {
     }
 
     /**
-     * Сохранить настройки элемента (фото, характеристики, заголовок)
+     * Сохранить настройки элемента (фото, источник заголовка и описания)
      */
     private async saveItemConfig(itemId: number, itemEl: HTMLElement): Promise<void> {
         // Собрать photo_index
         const photoRadio = itemEl.querySelector('.showcase-photo-radio:checked') as HTMLInputElement | null;
         const photoIndex = photoRadio?.value || null;
 
-        // Собрать характеристики
-        const charCheckboxes = itemEl.querySelectorAll('.showcase-characteristic-checkbox:checked');
-        const displayCharacteristics: string[] = [];
-        charCheckboxes.forEach((cb) => {
-            displayCharacteristics.push((cb as HTMLInputElement).value);
-        });
+        // Собрать источник заголовка
+        const titleSelect = itemEl.querySelector('.showcase-item-title-source') as HTMLSelectElement | null;
+        const titleSource = titleSelect?.value || null;
 
-        // Собрать кастомный заголовок
-        const titleInput = itemEl.querySelector('.showcase-item-custom-title') as HTMLInputElement;
-        const customTitle = titleInput?.value || null;
+        // Собрать источник описания
+        const descriptionSelect = itemEl.querySelector('.showcase-item-description-source') as HTMLSelectElement | null;
+        const descriptionSource = descriptionSelect?.value || null;
 
         try {
             const response = await this.request<ApiResponse>(this.config.endpoints.configureItem, {
                 item_id: itemId,
                 photo_index: photoIndex,
-                display_characteristics: displayCharacteristics,
-                custom_title: customTitle,
+                title_source: titleSource,
+                description_source: descriptionSource,
             });
 
             if (response.status === 'success') {
@@ -354,8 +350,8 @@ class ShowcaseManager {
                 id: item.id,
                 product_id: item.product_id,
                 photo_index: item.photo_index,
-                display_characteristics: item.display_characteristics,
-                custom_title: item.custom_title,
+                title_source: item.title_source,
+                description_source: item.description_source,
                 status: item.status,
             });
 

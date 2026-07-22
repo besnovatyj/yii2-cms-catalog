@@ -133,8 +133,8 @@ class ShowcaseManageService
         $item = $this->showcases->getItem($itemId);
         $item->configure(
             $form->photo_index !== null && $form->photo_index !== '' ? (int)$form->photo_index : null,
-            !empty($form->display_characteristics) ? $form->display_characteristics : null,
-            !empty($form->custom_title) ? $form->custom_title : null,
+            $form->title_source ?: null,
+            $form->description_source ?: null,
         );
         $this->showcases->saveItem($item);
     }

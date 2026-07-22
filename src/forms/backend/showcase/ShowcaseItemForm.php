@@ -8,24 +8,27 @@ declare(strict_types=1);
 
 namespace Besnovatyj\Catalog\forms\backend\showcase;
 
+use Besnovatyj\Catalog\entities\product\Product;
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
 use yii\base\Model;
 
 /**
- * Форма настройки элемента витрины
+ * Форма настройки элемента витрины: какое фото и из каких полей товара брать
+ * заголовок и описание. Допустимые значения источников — ключи реестров
+ * {@see Product::titleSources()} / {@see Product::descriptionSources()}.
  */
 class ShowcaseItemForm extends Model
 {
     public int|string|null $photo_index = null;
-    public array|null $display_characteristics = null;
-    public string|null $custom_title = null;
+    public string|null $title_source = null;
+    public string|null $description_source = null;
 
     public function __construct(?ShowcaseItem $item = null, $config = [])
     {
         if ($item) {
             $this->photo_index = $item->photo_index;
-            $this->display_characteristics = $item->getDisplayCharacteristicSlugs();
-            $this->custom_title = $item->custom_title;
+            $this->title_source = $item->title_source;
+            $this->description_source = $item->description_source;
         }
 
         parent::__construct($config);
@@ -39,8 +42,10 @@ class ShowcaseItemForm extends Model
         return [
             [['photo_index'], 'integer', 'min' => 0],
             [['photo_index'], 'default', 'value' => null],
-            [['custom_title'], 'string', 'max' => 255],
-            [['display_characteristics'], 'each', 'rule' => ['string']],
+            [['title_source'], 'default', 'value' => Product::TITLE_SOURCE_DEFAULT],
+            [['title_source'], 'in', 'range' => array_keys(Product::titleSources())],
+            [['description_source'], 'default', 'value' => Product::DESCRIPTION_SOURCE_DEFAULT],
+            [['description_source'], 'in', 'range' => array_keys(Product::descriptionSources())],
         ];
     }
 
@@ -51,8 +56,8 @@ class ShowcaseItemForm extends Model
     {
         return [
             'photo_index' => 'Индекс фото',
-            'display_characteristics' => 'Характеристики для отображения',
-            'custom_title' => 'Кастомный заголовок',
+            'title_source' => 'Заголовок из поля',
+            'description_source' => 'Описание из поля',
         ];
     }
 }

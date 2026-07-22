@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Besnovatyj\Catalog\controllers\backend;
 
-use Besnovatyj\Catalog\entities\Characteristic;
 use Besnovatyj\Catalog\entities\product\Product;
 use Besnovatyj\Catalog\entities\showcase\Showcase;
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
@@ -97,16 +96,13 @@ class ShowcaseController extends Controller
 
         $items = ShowcaseItem::find()
             ->andWhere(['showcase_id' => $showcase->id])
-            ->with(['product', 'product.photos', 'product.values'])
+            ->with(['product', 'product.photos'])
             ->orderBy(['sort' => SORT_ASC])
             ->all();
-
-        $characteristics = Characteristic::find()->orderBy('sort')->all();
 
         return $this->render('view', [
             'showcase' => $showcase,
             'items' => $items,
-            'characteristics' => $characteristics,
             'productsList' => $this->getProductsList($showcase),
         ]);
     }
@@ -263,7 +259,7 @@ class ShowcaseController extends Controller
     }
 
     /**
-     * Настроить элемент витрины (фото, характеристики, заголовок)
+     * Настроить элемент витрины (фото, источник заголовка и описания)
      *
      * @return array
      */
@@ -399,8 +395,8 @@ class ShowcaseController extends Controller
             'product_name' => $item->product ? $item->product->name : '',
             'product_name_short' => $item->product ? ($item->product->name_short ?: $item->product->name) : '',
             'photo_index' => $item->photo_index,
-            'display_characteristics' => $item->getDisplayCharacteristicSlugs(),
-            'custom_title' => $item->custom_title,
+            'title_source' => $item->title_source,
+            'description_source' => $item->description_source,
             'sort' => $item->sort,
             'status' => $item->status,
             'photos' => $photos,

@@ -5,26 +5,29 @@
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
 
-use Besnovatyj\Catalog\entities\Characteristic;
+use Besnovatyj\Catalog\entities\product\Product;
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
 use Besnovatyj\Catalog\helpers\ShowcaseHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 
 /* @var $item ShowcaseItem */
-/* @var $characteristics Characteristic[] */
 
 $product = $item->product;
 $photos = $product ? $product->photos : [];
 $displayPhoto = $item->getDisplayPhoto();
-$selectedSlugs = $item->getDisplayCharacteristicSlugs();
+
+$titleSources = Product::titleSources();
+$descriptionSources = Product::descriptionSources();
+$titleKey = $item->title_source ?: Product::TITLE_SOURCE_DEFAULT;
+$descriptionKey = $item->description_source ?: Product::DESCRIPTION_SOURCE_DEFAULT;
 
 $itemData = Json::encode([
     'id' => $item->id,
     'product_id' => $item->product_id,
     'photo_index' => $item->photo_index,
-    'display_characteristics' => $selectedSlugs,
-    'custom_title' => $item->custom_title,
+    'title_source' => $item->title_source,
+    'description_source' => $item->description_source,
     'status' => $item->status,
 ]);
 ?>
@@ -54,25 +57,12 @@ $itemData = Json::encode([
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <strong><?= Html::encode($product ? $product->name : 'Товар удалён') ?></strong>
-                    <?php if ($item->custom_title): ?>
-                        <br><small class="text-muted">Кастомный заголовок: <?= Html::encode($item->custom_title) ?></small>
-                    <?php endif; ?>
+                    <br><small class="text-muted">Заголовок: <?= Html::encode($titleSources[$titleKey] ?? $titleKey) ?></small>
+                    <br><small class="text-muted">Описание: <?= Html::encode($descriptionSources[$descriptionKey] ?? $descriptionKey) ?></small>
                     <?php if ($item->photo_index !== null): ?>
                         <br><small class="text-info">Фото #<?= $item->photo_index ?></small>
                     <?php else: ?>
                         <br><small class="text-muted">Главное фото</small>
-                    <?php endif; ?>
-                    <?php if (!empty($selectedSlugs)): ?>
-                        <br><small class="text-secondary">
-                            Характеристики: <?= implode(', ', array_map(static function (string $slug) use ($characteristics) {
-                                foreach ($characteristics as $c) {
-                                    if ($c->slug === $slug) {
-                                        return $c->name;
-                                    }
-                                }
-                                return $slug;
-                            }, $selectedSlugs)) ?>
-                        </small>
                     <?php endif; ?>
                 </div>
                 <div class="d-flex gap-1 align-items-center">
@@ -123,25 +113,28 @@ $itemData = Json::encode([
                         </div>
                     </div>
 
-                    <!-- Характеристики -->
+                    <!-- Источник заголовка -->
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">Характеристики</label>
-                        <?php foreach ($characteristics as $c): ?>
-                            <div class="form-check">
-                                <input class="form-check-input showcase-characteristic-checkbox" type="checkbox"
-                                       value="<?= Html::encode($c->slug) ?>"
-                                    <?= in_array($c->slug, $selectedSlugs, true) ? 'checked' : '' ?>>
-                                <label class="form-check-label"><?= Html::encode($c->name) ?></label>
-                            </div>
-                        <?php endforeach; ?>
+                        <label class="form-label fw-bold">Заголовок из поля</label>
+                        <select class="form-select showcase-item-title-source">
+                            <?php foreach ($titleSources as $key => $label): ?>
+                                <option value="<?= Html::encode($key) ?>" <?= $titleKey === $key ? 'selected' : '' ?>>
+                                    <?= Html::encode($label) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
-                    <!-- Кастомный заголовок -->
+                    <!-- Источник описания -->
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">Кастомный заголовок</label>
-                        <input type="text" class="form-control showcase-item-custom-title"
-                               value="<?= Html::encode($item->custom_title ?? '') ?>"
-                               placeholder="Оставьте пустым для name_short">
+                        <label class="form-label fw-bold">Описание из поля</label>
+                        <select class="form-select showcase-item-description-source">
+                            <?php foreach ($descriptionSources as $key => $label): ?>
+                                <option value="<?= Html::encode($key) ?>" <?= $descriptionKey === $key ? 'selected' : '' ?>>
+                                    <?= Html::encode($label) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
 

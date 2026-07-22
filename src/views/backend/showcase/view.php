@@ -5,7 +5,6 @@
  */
 
 use Besnovatyj\Catalog\assets\ShowcaseAsset;
-use Besnovatyj\Catalog\entities\Characteristic;
 use Besnovatyj\Catalog\entities\showcase\Showcase;
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
 use Besnovatyj\Catalog\helpers\ShowcaseHelper;
@@ -17,7 +16,6 @@ use yii\web\View;
 /* @var $this View */
 /* @var $showcase Showcase */
 /* @var $items ShowcaseItem[] */
-/* @var $characteristics Characteristic[] */
 /* @var $productsList array */
 
 ShowcaseAsset::register($this);
@@ -39,10 +37,6 @@ $jsConfig = Json::encode([
     ],
     'csrfToken' => Yii::$app->request->csrfToken,
     'csrfParam' => Yii::$app->request->csrfParam,
-    'characteristics' => array_map(static fn(Characteristic $c) => [
-        'slug' => $c->slug,
-        'name' => $c->name,
-    ], $characteristics),
 ]);
 
 $this->registerJs("window.showcaseConfig = {$jsConfig};", View::POS_HEAD);
@@ -119,7 +113,6 @@ $this->registerJs("window.showcaseConfig = {$jsConfig};", View::POS_HEAD);
             <?php foreach ($items as $item): ?>
                 <?= $this->render('_showcase_item', [
                     'item' => $item,
-                    'characteristics' => $characteristics,
                 ]) ?>
             <?php endforeach; ?>
         </div>

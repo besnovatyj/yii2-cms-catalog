@@ -5,7 +5,6 @@
  */
 
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
-use Besnovatyj\Catalog\helpers\ValueHelper;
 use yii\helpers\Url;
 
 /* @var $items ShowcaseItem[] */
@@ -24,7 +23,7 @@ use yii\helpers\Url;
         $productPhotoFileUrl = $displayPhoto ? $displayPhoto->getUploadUrl('file') : '';
 
         $displayTitle = $showcaseItem->getDisplayTitle();
-        $characteristicSlugs = $showcaseItem->getDisplayCharacteristicSlugs();
+        $displayDescription = $showcaseItem->getDisplayDescription();
         ?>
 
         <?php
@@ -59,21 +58,8 @@ use yii\helpers\Url;
                             <a href="<?= Url::to(['/Catalog/product/item', 'id' => $product->id]) ?>">
                                 <span><?= $displayTitle ?></span>
                             </a>
-                            <?php if (!empty($characteristicSlugs)): ?>
-                                <span>
-                                    <?php
-                                    // Отображение характеристик, настроенных в витрине
-                                    $values = $product->values;
-                                    $parts = [];
-                                    foreach ($characteristicSlugs as $slug) {
-                                        $val = ValueHelper::getValue($values, $slug);
-                                        if ($val !== '') {
-                                            $parts[] = $val;
-                                        }
-                                    }
-                                    echo implode(' ', $parts);
-                                    ?>
-                                </span>
+                            <?php if ($displayDescription !== ''): ?>
+                                <span><?= $displayDescription ?></span>
                             <?php endif; ?>
                         </p>
                     </div>

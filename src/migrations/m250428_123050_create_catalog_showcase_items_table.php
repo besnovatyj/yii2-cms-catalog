@@ -34,10 +34,10 @@ class m250428_123050_create_catalog_showcase_items_table extends BaseMigration
                 ->comment('Идентификатор товара'),
             'photo_index' => $this->integer(10)->null()
                 ->comment('Индекс фото товара (null = главное фото)'),
-            'display_characteristics' => $this->text()->null()
-                ->comment('JSON массив slug-ов характеристик для отображения'),
-            'custom_title' => $this->string(255)->null()
-                ->comment('Кастомный заголовок (переопределяет name_short товара)'),
+            'title_source' => $this->string(32)->null()
+                ->comment('Ключ поля-заголовка товара (name|name_short); null = дефолт'),
+            'description_source' => $this->string(32)->null()
+                ->comment('Ключ поля-описания товара (spec|description|...); null = дефолт'),
             'sort' => $this->integer(10)->notNull()->defaultValue(0)
                 ->comment('Сортировка'),
             'status' => $this->smallInteger(5)->notNull()->defaultValue(1)

@@ -19,8 +19,8 @@ use yii\db\ActiveRecord;
  * @property int $showcase_id
  * @property int $product_id
  * @property int|null $photo_index
- * @property string|null $display_characteristics
- * @property string|null $custom_title
+ * @property string|null $title_source
+ * @property string|null $description_source
  * @property int $sort
  * @property int $status
  *
@@ -49,18 +49,19 @@ class ShowcaseItem extends ActiveRecord
     }
 
     /**
-     * @param int|null $photoIndex
-     * @param array|null $displayCharacteristics
-     * @param string|null $customTitle
+     * Настроить вывод элемента: какое фото и из каких полей товара брать
+     * заголовок и описание.
+     *
+     * @param int|null $photoIndex какое фото товара; null = главное
+     * @param string|null $titleSource ключ поля-заголовка товара; null = дефолт
+     * @param string|null $descriptionSource ключ поля-описания товара; null = дефолт
      * @return void
      */
-    public function configure(?int $photoIndex, ?array $displayCharacteristics, ?string $customTitle): void
+    public function configure(?int $photoIndex, ?string $titleSource, ?string $descriptionSource): void
     {
         $this->photo_index = $photoIndex;
-        $this->display_characteristics = $displayCharacteristics !== null
-            ? json_encode($displayCharacteristics, JSON_UNESCAPED_UNICODE)
-            : null;
-        $this->custom_title = $customTitle;
+        $this->title_source = $titleSource;
+        $this->description_source = $descriptionSource;
     }
 
     /**
@@ -82,27 +83,29 @@ class ShowcaseItem extends ActiveRecord
     }
 
     /**
-     * Возвращает заголовок для отображения в витрине
+     * Возвращает заголовок для отображения в витрине — из выбранного поля товара.
      *
      * @return string
      */
     public function getDisplayTitle(): string
     {
-        return $this->custom_title ?: ($this->product->name_short ?: $this->product->name);
+        if ($this->product === null) {
+            return '';
+        }
+        return $this->product->displayText($this->title_source ?: Product::TITLE_SOURCE_DEFAULT);
     }
 
     /**
-     * Возвращает массив slug-ов характеристик для отображения
+     * Возвращает описание для отображения в витрине — из выбранного поля товара.
      *
-     * @return array
+     * @return string
      */
-    public function getDisplayCharacteristicSlugs(): array
+    public function getDisplayDescription(): string
     {
-        if ($this->display_characteristics === null) {
-            return [];
+        if ($this->product === null) {
+            return '';
         }
-        $decoded = json_decode($this->display_characteristics, true);
-        return is_array($decoded) ? $decoded : [];
+        return $this->product->displayText($this->description_source ?: Product::DESCRIPTION_SOURCE_DEFAULT);
     }
 
     /**
