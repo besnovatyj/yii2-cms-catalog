@@ -68,6 +68,8 @@ class ProductManageService
             $form->description,
             $form->description_short,
             $form->weight,
+            $form->spec_primary,
+            $form->spec_pieces,
             new Meta(
                 $form->metaForm->title,
                 $form->metaForm->description,
@@ -102,6 +104,8 @@ class ProductManageService
             $form->description,
             $form->description_short,
             $form->weight,
+            $form->spec_primary,
+            $form->spec_pieces,
             new Meta(
                 $form->metaForm->title,
                 $form->metaForm->description,

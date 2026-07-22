@@ -26,6 +26,8 @@ use yii\web\View;
             <div class="col-md-6">
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
                 <?= $form->field($model, 'name_short')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'spec_primary')->textInput(['maxlength' => true, 'placeholder' => 'напр. 500 мл']) ?>
+                <?= $form->field($model, 'spec_pieces')->textInput(['maxlength' => true, 'placeholder' => 'напр. 30 капсул; пусто = не показывать']) ?>
             </div>
             <div class="col-md-6">
                 <?= $form->field($model, 'brandId')->dropDownList($model->brandsList()) ?>

@@ -44,6 +44,10 @@ class m250428_122930_create_catalog_products_table extends BaseMigration
                 ->comment('Описание товара'),
             'description_short' => $this->text()->null()
                 ->comment('Описание товара (short)'),
+            'spec_primary' => $this->string(255)->null()
+                ->comment('Строка-спецификация (осн.), напр. «500 мл»'),
+            'spec_pieces' => $this->string(255)->null()
+                ->comment('Строка-спецификация (штук), напр. «30 капсул»; пусто = не показывать'),
             'meta_json' => $this->text()->null()
                 ->comment('JSON meta'),
             'main_photo_id' => $this->integer(10)->null()

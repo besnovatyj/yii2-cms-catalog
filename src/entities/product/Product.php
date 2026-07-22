@@ -32,6 +32,8 @@ use yii\db\ActiveRecord;
  * @property string $name_short
  * @property string $description
  * @property string $description_short
+ * @property string $spec_primary
+ * @property string $spec_pieces
  * @property int $category_id
  * @property int $brand_id
  * @property int $rating
@@ -61,9 +63,14 @@ class Product extends ActiveRecord implements AggregateRoot
     public const int STATUS_DRAFT = 0;
     public const int STATUS_ACTIVE = 1;
 
+    /** Ключ поля-заголовка по умолчанию для элемента витрины */
+    public const string TITLE_SOURCE_DEFAULT = 'name_short';
+    /** Ключ поля-описания по умолчанию для элемента витрины */
+    public const string DESCRIPTION_SOURCE_DEFAULT = 'spec';
+
     public Meta $meta;
 
-    public static function create(int $brandId, int $categoryId, ?string $code, string $name, ?string $name_short, ?string $description, ?string $description_short, ?string $weight, Meta $meta): self
+    public static function create(int $brandId, int $categoryId, ?string $code, string $name, ?string $name_short, ?string $description, ?string $description_short, ?string $weight, ?string $specPrimary, ?string $specPieces, Meta $meta): self
     {
         if (trim($name) === '') {
             throw new DomainException('Product name cannot be empty.');
@@ -77,6 +84,8 @@ class Product extends ActiveRecord implements AggregateRoot
         $product->name_short = $name_short;
         $product->description = $description;
         $product->description_short = $description_short;
+        $product->spec_primary = $specPrimary;
+        $product->spec_pieces = $specPieces;
         $product->weight = $weight;
         $product->meta = $meta;
         $product->status = self::STATUS_DRAFT;
@@ -84,7 +93,7 @@ class Product extends ActiveRecord implements AggregateRoot
         return $product;
     }
 
-    public function edit(int $brandId, ?string $code, string $name, ?string $name_short, ?string $description, ?string $description_short, ?string $weight, Meta $meta): void
+    public function edit(int $brandId, ?string $code, string $name, ?string $name_short, ?string $description, ?string $description_short, ?string $weight, ?string $specPrimary, ?string $specPieces, Meta $meta): void
     {
         if (trim($name) === '') {
             throw new DomainException('Product name cannot be empty.');
@@ -96,9 +105,84 @@ class Product extends ActiveRecord implements AggregateRoot
         $this->name_short = $name_short;
         $this->description = $description;
         $this->description_short = $description_short;
+        $this->spec_primary = $specPrimary;
+        $this->spec_pieces = $specPieces;
         $this->weight = $weight;
         $this->meta = $meta;
     }
+
+    // <editor-fold desc="Отображаемые поля (реестр для витрин)">
+
+    /**
+     * Поля-кандидаты для ЗАГОЛОВКА элемента витрины: ключ => метка для админки.
+     *
+     * Единый источник правды: из него строится выпадающий список в форме
+     * элемента витрины, его же ключами валидируется {@see title_source}.
+     *
+     * @return array<string, string>
+     */
+    public static function titleSources(): array
+    {
+        return [
+            'name' => 'Полное название',
+            'name_short' => 'Короткое название',
+        ];
+    }
+
+    /**
+     * Поля-кандидаты для ОПИСАНИЯ элемента витрины: ключ => метка для админки.
+     *
+     * Чтобы добавить новый вариант описания, достаточно завести колонку у
+     * товара, добавить сюда строку и ветку в {@see displayText()} — форма
+     * витрины и рендер подхватят его автоматически.
+     *
+     * @return array<string, string>
+     */
+    public static function descriptionSources(): array
+    {
+        return [
+            'spec' => 'Спецификация (напр. «500 мл / 30 капсул»)',
+            'description' => 'Полное описание',
+            'description_short' => 'Короткое описание (запасное)',
+        ];
+    }
+
+    /**
+     * Возвращает готовый к выводу HTML отображаемого поля по его ключу.
+     *
+     * Здесь же собираются вычисляемые источники (например, `spec` из двух
+     * колонок с `<small>`-обёрткой). Неизвестный/удалённый ключ безопасно
+     * сводится к дефолтному описанию — без фатала и «поехавшей» вёрстки.
+     */
+    public function displayText(string $key): string
+    {
+        return match ($key) {
+            'name' => (string)$this->name,
+            'name_short' => (string)$this->name_short,
+            'description' => (string)$this->description,
+            'description_short' => (string)$this->description_short,
+            'spec' => $this->renderSpec(),
+            default => $this->renderSpec(),
+        };
+    }
+
+    /**
+     * Короткая строка-спецификация под названием товара в карточках/слайдерах.
+     *
+     * Формат сохраняет текущую вёрстку 1:1: основная строка (`spec_primary`) и,
+     * если задано число штук (`spec_pieces`), приписка «/ …» в `<small>`.
+     */
+    public function renderSpec(): string
+    {
+        $out = (string)$this->spec_primary;
+        if (trim((string)$this->spec_pieces) !== '') {
+            $out .= ' / <small>' . $this->spec_pieces . '</small>';
+        }
+        return $out;
+    }
+
+    // </editor-fold>
+
 
     public function changeMainCategory(int $categoryId): void
     {

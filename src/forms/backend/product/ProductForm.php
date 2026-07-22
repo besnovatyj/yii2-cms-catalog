@@ -27,6 +27,8 @@ class ProductForm extends CompositeForm
     public string|null $name_short = null;
     public string|null $description = null;
     public string|null $description_short = null;
+    public string|null $spec_primary = null;
+    public string|null $spec_pieces = null;
     public string|null $weight = null;
 
     private ?Product $_product = null;
@@ -40,6 +42,8 @@ class ProductForm extends CompositeForm
             $this->name_short = $product->name_short;
             $this->description = $product->description;
             $this->description_short = $product->description_short;
+            $this->spec_primary = $product->spec_primary;
+            $this->spec_pieces = $product->spec_pieces;
             $this->weight = $product->weight;
             $this->metaForm = new MetaForm($product->meta);
             $this->categoriesForm = new CategoriesForm($product);
@@ -65,7 +69,7 @@ class ProductForm extends CompositeForm
         return [
             [['brandId', 'name'], 'required'],
             [['brandId'], 'integer'],
-            [['code', 'name', 'name_short', 'weight'], 'string', 'max' => 255],
+            [['code', 'name', 'name_short', 'weight', 'spec_primary', 'spec_pieces'], 'string', 'max' => 255],
             [['code'], 'unique', 'targetClass' => Product::class, 'filter' => $this->_product ? ['<>', 'id', $this->_product->id] : null],
             [['description', 'description_short',], 'string'],
         ];
