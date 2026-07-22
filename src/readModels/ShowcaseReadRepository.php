@@ -57,7 +57,6 @@ class ShowcaseReadRepository
                     $query->andWhere(['status' => Product::STATUS_ACTIVE]);
                 },
                 'product.photos',
-                'product.values',
                 'product.mainPhoto',
             ])
             ->orderBy(['sort' => SORT_ASC])

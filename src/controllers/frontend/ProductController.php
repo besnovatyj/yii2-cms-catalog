@@ -30,30 +30,15 @@ class ProductController extends Controller
     }
 
     /**
-     * Выбираем вручную несколько категорий и выводим их описание и все их продукты
-     * TODO в следующей версии или виджеты категорий или выбираем все корни категорий
-     *  (в следующей версии работа с несколькими корнями гораздо удобнее).
-     * NB Текущая реализация не имеет права на существование :)
+     * Страница каталога: активные корневые категории в порядке отображения.
+     * Их описание и товары рендерит тема (виджет витрины категории на каждый
+     * корень), состав определяется данными дерева, без хардкода slug-ов.
      * @return string
      */
     public function actionIndex(): string
     {
-        $timsonCCategory = $this->categories->findBySlug('all-products');
-        $timsonCProductsProvider = $this->products->getAllByCategory($timsonCCategory);
-
-        $aoguCategory = $this->categories->findBySlug('aogu');
-        $aoguProductsProvider = $this->products->getAllByCategory($aoguCategory);
-
-        $haserveyCategory = $this->categories->findBySlug('haservey');
-        $haserveyProductsProvider = $this->products->getAllByCategory($haserveyCategory);
-
         return $this->render('index', [
-            'timsonCCategory' => $timsonCCategory,
-            'timsonCProductsProvider' => $timsonCProductsProvider,
-            'aoguCategory' => $aoguCategory,
-            'aoguProductsProvider' => $aoguProductsProvider,
-            'haserveyCategory' => $haserveyCategory,
-            'haserveyProductsProvider' => $haserveyProductsProvider,
+            'categories' => $this->categories->getDisplayRoots(),
         ]);
     }
 

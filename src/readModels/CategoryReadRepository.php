@@ -38,6 +38,21 @@ class CategoryReadRepository
     }
 
     /**
+     * Активные корневые категории для страницы каталога (уровень под виртуальным
+     * корнем, depth = 1), в порядке отображения. Заменяет хардкод конкретных
+     * slug-ов: список категорий каталога определяется данными дерева.
+     *
+     * @return Category[]
+     */
+    public function getDisplayRoots(): array
+    {
+        return Category::find()
+            ->andWhere(['depth' => 1, 'status' => 1])
+            ->orderBy(['sort_order' => SORT_ASC, 'lft' => SORT_ASC])
+            ->all();
+    }
+
+    /**
      * ЧПУ-путь категории: слаги предков (без виртуального корня depth=0) и самого узла через «/».
      * Используется {@see \Besnovatyj\Catalog\urls\CategoryUrlRule} для разбора/генерации ЧПУ-адресов.
      */
