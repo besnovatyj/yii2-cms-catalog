@@ -50,7 +50,6 @@ use yii\db\ActiveRecord;
  * @property TagAssignment[] $tagAssignments
  * @property Tag[] $tags
  * @property RelatedAssignment[] $relatedAssignments
- * @property Value[] $values
  * @property Photo[] $photos
  * @property Photo $mainPhoto
  *
@@ -220,17 +219,6 @@ class Product extends ActiveRecord implements AggregateRoot
         return $this->meta->title ?: $this->name;
     }
 
-    public function getValue(int $characteristic_id): Value
-    {
-        $values = $this->values;
-        foreach ($values as $val) {
-            if ($val->isForCharacteristic($characteristic_id)) {
-                return $val;
-            }
-        }
-        return Value::blank($characteristic_id);
-    }
-
     // <editor-fold desc="Images">
 
     public function setMainPhoto(?int $imageId): void
@@ -270,11 +258,6 @@ class Product extends ActiveRecord implements AggregateRoot
     public function getTags(): ActiveQuery
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])->via('tagAssignments');
-    }
-
-    public function getValues(): ActiveQuery
-    {
-        return $this->hasMany(Value::class, ['product_id' => 'id']);
     }
 
     public function getPhotos(): ActiveQuery

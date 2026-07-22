@@ -5,7 +5,6 @@
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
 
-use Besnovatyj\Catalog\helpers\ValueHelper;
 use Besnovatyj\Catalog\widgets\products\ProductsArrayWidget;
 use yii\helpers\Url;
 
@@ -54,13 +53,7 @@ use yii\helpers\Url;
                                 <span><?= $item->name_short ?></span>
                             </a>
                             <span>
-                                <?= ValueHelper::getValue($item->values, 'package_weight_volume') . ' ' . ValueHelper::getValue($item->values, 'unit_change_packaging') ?>
-
-                                <?php
-                                if ((bool)ValueHelper::getValue($item->values, 'show_the_number_of_pieces_in_the_catalog_grid') === true) {
-                                    echo '/ <small>' . ValueHelper::getValue($item->values, 'units_per_one_package') . ' ' . ValueHelper::getValue($item->values, 'unit_of_measurement_of_number_of_pieces') . '</small>';
-                                }
-                                ?>
+                                <?= $item->renderSpec() ?>
                             </span>
                         </p>
                     </div>

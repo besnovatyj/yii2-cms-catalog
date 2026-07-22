@@ -67,14 +67,6 @@ $this->params['active_category'] = $product->category;
             <div class="tab-pane" id="tab-specification">
                 <table class="table table-bordered">
                     <tbody>
-                    <?php foreach ($product->values as $value): ?>
-                        <?php if (!empty($value->value)): ?>
-                            <tr>
-                                <th><?= Html::encode($value->characteristic->name) ?></th>
-                                <td><?= Html::encode($value->value) ?></td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

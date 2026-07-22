@@ -81,25 +81,6 @@ use yii\web\View;
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Characteristics</div>
-            <div class="card-body">
-                <?php foreach ($model->valueForms as $i => $value): ?>
-                    <?php if ($variants = $value->variantsList()): ?>
-                        <?= $form->field($value, '[' . $i . ']value')->dropDownList($variants, ['prompt' => '']) ?>
-                    <?php else: ?>
-                        <?= $form->field($value, '[' . $i . ']value')->textInput() ?>
-                    <?php endif ?>
-                <?php endforeach; ?>
-            </div>
-            <div class="card-footer">
-                <div class="d-grid gap-2">
-                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="row">

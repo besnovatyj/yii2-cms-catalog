@@ -29,7 +29,6 @@ class ProductManageService
     private CategoryRepository $categories;
     private ProductCategoryService $categoryService;
     private ProductTagService $tagService;
-    private ProductCharacteristicService $characteristicService;
     private TransactionManager $transaction;
 
     public function __construct(
@@ -38,7 +37,6 @@ class ProductManageService
         CategoryRepository           $categories,
         ProductCategoryService       $categoryService,
         ProductTagService            $tagService,
-        ProductCharacteristicService $characteristicService,
         TransactionManager           $transaction
     )
     {
@@ -47,7 +45,6 @@ class ProductManageService
         $this->categories = $categories;
         $this->categoryService = $categoryService;
         $this->tagService = $tagService;
-        $this->characteristicService = $characteristicService;
         $this->transaction = $transaction;
     }
 
@@ -82,7 +79,6 @@ class ProductManageService
 
             $this->categoryService->assign($product, $form->categoriesForm->others);
             $this->tagService->assign($product, $form->tagsForm->newTagsNames);
-            $this->characteristicService->assign($product, $form->valueForms);
 
         });
         return $product;
@@ -121,11 +117,9 @@ class ProductManageService
 
             $this->categoryService->revoke($product);
             $this->tagService->revoke($product);
-            $this->characteristicService->revoke($product);
 
             $this->categoryService->assign($product, $form->categoriesForm->others);
             $this->tagService->assign($product, $form->tagsForm->newTagsNames);
-            $this->characteristicService->assign($product, $form->valueForms);
 
         });
     }
@@ -161,7 +155,6 @@ class ProductManageService
         $this->transaction->wrap(function () use ($product) {
             $this->categoryService->revoke($product);
             $this->tagService->revoke($product);
-            $this->characteristicService->revoke($product);
             $this->products->remove($product);
         });
     }

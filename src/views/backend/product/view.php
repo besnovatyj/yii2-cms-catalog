@@ -5,7 +5,6 @@
  */
 
 use Besnovatyj\Catalog\entities\product\Product;
-use Besnovatyj\Catalog\entities\product\Value;
 use Besnovatyj\Catalog\forms\backend\product\PhotosForm;
 use Besnovatyj\Catalog\helpers\ProductHelper;
 use Besnovatyj\Images\widgets\upload\Widget;
@@ -87,22 +86,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => $product->weight,
                         ],
                     ],
-                ]) ?>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Characteristics</div>
-            <div class="card-body">
-                <?= DetailView::widget([
-                    'model' => $product,
-                    'attributes' => array_map(static function (Value $value) {
-                        return [
-                            'label' => $value->characteristic->name,
-                            'value' => $value->value,
-                        ];
-                    }, $product->values),
                 ]) ?>
             </div>
         </div>

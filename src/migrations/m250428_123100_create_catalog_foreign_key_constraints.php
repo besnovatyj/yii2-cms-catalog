@@ -61,32 +61,6 @@ class m250428_123100_create_catalog_foreign_key_constraints extends BaseMigratio
             'RESTRICT',
         );
 
-        // catalog_values
-        $this->createFKs(
-            m250428_122950_create_catalog_values_table::TABLE_NAME,
-            'product_id',
-            m250428_122930_create_catalog_products_table::TABLE_NAME,
-            'id',
-            'CASCADE',
-            'RESTRICT',
-        );
-        $this->createFKs(
-            m250428_122950_create_catalog_values_table::TABLE_NAME,
-            'characteristic_id',
-            m250428_122920_create_catalog_characteristics_table::TABLE_NAME,
-            'id',
-            'CASCADE',
-            'RESTRICT',
-        );
-        $this->createFKs(
-            m250428_122950_create_catalog_values_table::TABLE_NAME,
-            'slug',
-            m250428_122920_create_catalog_characteristics_table::TABLE_NAME,
-            'slug',
-            'CASCADE',
-            'CASCADE',
-        );
-
         // catalog_photos
         $this->createFKs(
             m250428_123000_create_catalog_photos_table::TABLE_NAME,

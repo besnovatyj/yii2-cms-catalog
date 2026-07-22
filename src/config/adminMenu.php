@@ -89,27 +89,6 @@ return [
         ],
     ],
 
-    // Characteristics
-    [
-        'label' => 'Characteristics',
-        'iconClass' => 'bi bi-sliders me-1',
-        'url' => ['/Catalog/backend/characteristic/index'],
-        'active' => static function () {
-            return str_contains(\Yii::$app->request->url, 'Catalog/backend/characteristic');
-        },
-        '_meta' => [
-            'placements' => [
-                [
-                    'location'      => 'left-sidebar',
-                    'group'         => 'Catalog',
-                    'groupIcon'     => 'bi bi-journals',
-                    'priority'      => 100,
-                    'groupPriority' => 100,
-                ],
-            ],
-        ],
-    ],
-
     // Tags
     [
         'label' => 'Tags',
