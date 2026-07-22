@@ -36,7 +36,7 @@ return [
         'frontendUrlManager' => [
             'rules' => [
                 'catalog'                => 'Catalog/category/index',
-                ['class' => CategoryUrlRule::class], // catalog/<slug-путь дерева> ↔ Catalog/category/view
+                //['class' => CategoryUrlRule::class], // catalog/<slug-путь дерева> ↔ Catalog/category/view
                 'catalog/<id:\d+>'       => 'Catalog/product/view',
             ],
         ],
