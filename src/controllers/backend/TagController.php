@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -15,9 +14,7 @@ use Besnovatyj\Kernel\controller\ControllerTrait;
 use Exception;
 use Throwable;
 use Yii;
-use yii\db\StaleObjectException;
 use yii\filters\VerbFilter;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -11,10 +10,9 @@ use Besnovatyj\Catalog\entities\Category;
 use Besnovatyj\Forms\CompositeForm;
 use Besnovatyj\Helpers\StringHelper;
 use Besnovatyj\Meta\MetaForm;
-use Besnovatyj\Validators\SlugValidator;
 use Besnovatyj\TreeManager\Manager\forms\TreeNodeFormInterface;
 use Besnovatyj\TreeManager\Manager\TreeQueryScope;
-
+use Besnovatyj\Validators\SlugValidator;
 
 /**
  * @property MetaForm $meta;
@@ -43,7 +41,7 @@ class CategoryForm extends CompositeForm implements TreeNodeFormInterface
     public string $slug = '';
     public string $description = '';
 
-    private ?Category $_category = null;
+    private ?Category $_category;
 
     public function __construct(?Category $category = null, ?int $parentId = null, $config = [])
     {
@@ -112,7 +110,7 @@ class CategoryForm extends CompositeForm implements TreeNodeFormInterface
 
     public function isNewRecord(): bool
     {
-        return $this->_category !== null;
+        return !($this->_category instanceof Category);
     }
 
     // Для того чтобы упростить поиск полей в сервисе TreeControllerTrait

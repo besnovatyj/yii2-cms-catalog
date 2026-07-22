@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -125,7 +124,7 @@ class ShowcaseController extends Controller
                 $showcase = $this->service->create($form);
                 return $this->redirect(['view', 'id' => $showcase->id]);
             } catch (Exception $e) {
-                $this->handleDomainException($e, 'Ошибка');
+                $this->handleDomainException($e);
             }
         }
         return $this->render('create', [
@@ -149,7 +148,7 @@ class ShowcaseController extends Controller
                 $this->service->edit($showcase->id, $form);
                 return $this->redirect(['view', 'id' => $showcase->id]);
             } catch (Exception $e) {
-                $this->handleDomainException($e, 'Ошибка');
+                $this->handleDomainException($e);
             }
         }
         return $this->render('update', [

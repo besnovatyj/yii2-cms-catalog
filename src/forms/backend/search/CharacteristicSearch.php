@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -10,6 +9,7 @@ namespace Besnovatyj\Catalog\forms\backend\search;
 use Besnovatyj\Catalog\helpers\CharacteristicHelper;
 use Besnovatyj\Catalog\entities\Characteristic;
 use Besnovatyj\Forms\BaseForm;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -70,8 +70,8 @@ class CharacteristicSearch extends BaseForm
     public function requiredList(): array
     {
         return [
-            1 => \Yii::$app->formatter->asBoolean(true),
-            0 => \Yii::$app->formatter->asBoolean(false),
+            1 => Yii::$app->formatter->asBoolean(true),
+            0 => Yii::$app->formatter->asBoolean(false),
         ];
     }
 }

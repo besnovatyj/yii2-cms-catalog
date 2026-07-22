@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -11,6 +10,7 @@ namespace Besnovatyj\Catalog\helpers;
 
 use Besnovatyj\Catalog\entities\showcase\Showcase;
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
+use Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
@@ -33,7 +33,7 @@ class ShowcaseHelper
     /**
      * @param int $status
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function statusLabel(int $status): string
     {

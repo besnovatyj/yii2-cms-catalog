@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -22,7 +21,7 @@ use yii\helpers\Url;
 
         $productPhotoThumbUrl = $displayPhoto ? $displayPhoto->getThumbUrl('file', 'slider') : '';
         $productPhotoThumbUrl_lazy = $displayPhoto ? $displayPhoto->getThumbUrl('file', 'slider_lazy') : '';
-        $productPhotoFileUrl = $displayPhoto ? $displayPhoto->getImageUrl('file') : '';
+        $productPhotoFileUrl = $displayPhoto ? $displayPhoto->getUploadUrl('file') : '';
 
         $displayTitle = $showcaseItem->getDisplayTitle();
         $characteristicSlugs = $showcaseItem->getDisplayCharacteristicSlugs();
@@ -46,7 +45,7 @@ use yii\helpers\Url;
                         <i class="fa-solid fa-up-right-and-down-left-from-center"
                            title="Увеличить изображение"></i>
                     </a>
-                    <a href="<?= Url::to(['/catalog/product/item', 'id' => $product->id]) ?>"
+                    <a href="<?= Url::to(['/Catalog/product/item', 'id' => $product->id]) ?>"
                        class="text-color black-75">
                         <i title="Перейти на страницу"></i>
                     </a>
@@ -57,7 +56,7 @@ use yii\helpers\Url;
                          alt="<?= $displayTitle ?>">
                     <div>
                         <p>
-                            <a href="<?= Url::to(['/catalog/product/item', 'id' => $product->id]) ?>">
+                            <a href="<?= Url::to(['/Catalog/product/item', 'id' => $product->id]) ?>">
                                 <span><?= $displayTitle ?></span>
                             </a>
                             <?php if (!empty($characteristicSlugs)): ?>

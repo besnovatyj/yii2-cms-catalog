@@ -5,7 +5,7 @@
  */
 
 return [
-    // Catalog
+    // Products
     [
         'label'     => 'Products',
         'iconClass' => 'bi bi-box-seam me-1',
@@ -53,7 +53,28 @@ return [
         'iconClass' => 'bi bi-diagram-3 me-1',
         'url' => ['/Catalog/backend/category/index'],
         'active' => static function () {
-            return str_contains(\Yii::$app->request->url, 'Catalog/backend/category');
+            return \Yii::$app->request->url === '/Catalog/backend/category/index';
+        },
+        '_meta' => [
+            'placements' => [
+                [
+                    'location'      => 'left-sidebar',
+                    'group'         => 'Catalog',
+                    'groupIcon'     => 'bi bi-journals',
+                    'priority'      => 100,
+                    'groupPriority' => 100,
+                ],
+            ],
+        ],
+    ],
+
+    // Categories-list
+    [
+        'label'     => 'Categories-list',
+        'iconClass' => 'bi bi-diagram-3 me-1',
+        'url' => ['/Catalog/backend/category-simple/index'],
+        'active' => static function () {
+            return str_contains(\Yii::$app->request->url, 'Catalog/backend/category-simple');
         },
         '_meta' => [
             'placements' => [

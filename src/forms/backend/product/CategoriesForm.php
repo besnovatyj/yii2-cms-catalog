@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -16,7 +15,7 @@ use yii\helpers\ArrayHelper;
 class CategoriesForm extends BaseForm
 {
     public int|null $main = null;
-    public $others = [];
+    public array $others = [];
 
     public function __construct(?Product $product = null, $config = [])
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -20,7 +19,7 @@ use yii\db\ActiveRecord;
  */
 class Brand extends ActiveRecord
 {
-    public $meta;
+    public Meta|null $meta = null;
 
     public static function create(string $name, string $slug, Meta $meta): self
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -89,7 +88,7 @@ class Category extends Node
     public function afterSave($insert, $changedAttributes): void
     {
         parent::afterSave($insert, $changedAttributes);
-        FilesystemHelper::createDirectoryRecursively(\Yii::getAlias('@static/origin/Catalog/Categories/' . $this->id));
+        FilesystemHelper::createDirectoryRecursively(Yii::getAlias('@static/origin/Catalog/Categories/' . $this->id));
     }
 
     /**

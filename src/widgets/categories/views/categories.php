@@ -1,16 +1,17 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
 
-/**
- * @var \Besnovatyj\Catalog\readModels\views\CategoryView[] $items
- * @var \Besnovatyj\Catalog\entities\Category|null $active
- */
-
+use Besnovatyj\Catalog\entities\Category;
+use Besnovatyj\Catalog\readModels\views\CategoryView;
 use yii\helpers\Html;
+
+/**
+ * @var CategoryView[] $items
+ * @var Category|null $active
+ */
 
 ?>
 <div class="list-group">

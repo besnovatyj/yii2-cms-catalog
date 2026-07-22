@@ -46,13 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="card">
     <div class="card-header">Description</div>
     <div class="card-body">
-        <?= Yii::$app->formatter->asHtml($category->description, [
-            'Attr.AllowedRel' => array('nofollow'),
-            'HTML.SafeObject' => true,
-            'Output.FlashCompat' => true,
-            'HTML.SafeIframe' => true,
-            'URI.SafeIframeRegexp' => '%^(https?:)?//(www\.youtube(?:-nocookie)?\.com/embed/|player\.vimeo\.com/video/)%',
-        ]) ?>
+        <?= \Besnovatyj\Shortcode\widgets\ShortcodeContent::widget(['content' => $category->description]) ?>
     </div>
 </div>
 <div class="card">

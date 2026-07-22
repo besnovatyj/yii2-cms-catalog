@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -15,6 +14,7 @@ use Besnovatyj\Catalog\forms\backend\showcase\ShowcaseForm;
 use Besnovatyj\Catalog\forms\backend\showcase\ShowcaseItemForm;
 use Besnovatyj\Catalog\repositories\ProductRepository;
 use Besnovatyj\Catalog\repositories\ShowcaseRepository;
+use Throwable;
 use yii\db\Exception;
 
 /**
@@ -90,7 +90,7 @@ class ShowcaseManageService
     /**
      * @param int $id
      * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function remove(int $id): void
     {
@@ -144,7 +144,7 @@ class ShowcaseManageService
      *
      * @param int $itemId
      * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function removeItem(int $itemId): void
     {

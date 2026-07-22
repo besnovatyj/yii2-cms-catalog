@@ -49,6 +49,9 @@ final class CategoryUrlRule extends BaseObject implements UrlRuleInterface
         $this->cache = Yii::$app->cache;
     }
 
+    /**
+     * @throws UrlNormalizerRedirectException
+     */
     public function parseRequest($manager, $request): array|false
     {
         if (!preg_match('#^' . $this->prefix . '/(.*[a-z])$#is', $request->pathInfo, $matches)) {

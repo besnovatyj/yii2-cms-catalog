@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Copyright (c) 2026 Besnovatyj. Licensed under the MIT License.
  */
@@ -89,22 +88,14 @@ class ProductController extends Controller
     {
         $product = $this->findModel($id);
 
-        $photosForm = new PhotosForm();
-        if ($photosForm->load(Yii::$app->request->post()) && $photosForm->validate()) {
-            try {
-                $this->service->addPhotos($product->id, $photosForm);
-                return $this->redirect(['view', 'id' => $product->id]);
-            } catch (Exception $e) {
-                $this->handleDomainException($e);
-            }
-        }
-
         return $this->render('view', [
             'product' => $product,
-            'photosForm' => $photosForm,
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function actionCreate(): Response|string
     {
         $form = new ProductForm();
@@ -122,7 +113,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @throws NotFoundHttpException
+     * @throws NotFoundHttpException|Throwable
      */
     public function actionUpdate($id): Response|string
     {
@@ -149,7 +140,7 @@ class ProductController extends Controller
      * {@see BadRequestHttpException} (реальный HTTP 400 + сообщение); инфраструктурные исключения
      * сервиса всплывают к ErrorHandler (в проде скрыты, в debug видны). Успех — конверт `{status:'success', ...}`.
      *
-     * @throws BadRequestHttpException|NotFoundHttpException
+     * @throws BadRequestHttpException|NotFoundHttpException|Throwable
      */
     public function actionAjaxSave(): array
     {
