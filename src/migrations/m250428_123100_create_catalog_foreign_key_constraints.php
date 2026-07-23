@@ -125,6 +125,16 @@ class m250428_123100_create_catalog_foreign_key_constraints extends BaseMigratio
             'RESTRICT',
         );
 
+        // catalog_showcases: необязательная привязка витрины к категории
+        $this->createFKs(
+            m250428_123040_create_catalog_showcases_table::TABLE_NAME,
+            'category_id',
+            m250428_122910_create_catalog_categories_table::TABLE_NAME,
+            'id',
+            'SET NULL',
+            'RESTRICT',
+        );
+
         Yii::$app->db->createCommand('SET foreign_key_checks = 1')->execute();
 
     }

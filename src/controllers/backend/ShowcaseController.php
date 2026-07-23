@@ -56,6 +56,7 @@ class ShowcaseController extends Controller
                     'delete' => ['POST'],
                     'activate' => ['POST'],
                     'draft' => ['POST'],
+                    'sync-from-category' => ['POST'],
                     'add-item' => ['POST'],
                     'remove-item' => ['POST'],
                     'reorder-items' => ['POST'],
@@ -190,6 +191,25 @@ class ShowcaseController extends Controller
         try {
             $this->service->draft($id);
         } catch (Exception $e) {
+            Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
+        }
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    /**
+     * Дозаполнить витрину товарами привязанной категории.
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function actionSyncFromCategory(int $id): Response
+    {
+        try {
+            $added = $this->service->syncFromCategory($id);
+            Yii::$app->session->setFlash('success', $added > 0
+                ? "Добавлено товаров из категории: {$added}."
+                : 'Новых товаров в категории не найдено — витрина уже актуальна.');
+        } catch (Throwable $e) {
             Yii::$app->session->setFlash('error', VarDumper::dumpAsString($e->getMessage()));
         }
         return $this->redirect(['view', 'id' => $id]);

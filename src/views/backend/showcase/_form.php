@@ -27,6 +27,9 @@ use yii\web\View;
             </div>
             <div class="col-md-6">
                 <?= $form->field($model, 'sort')->textInput(['type' => 'number']) ?>
+                <?= $form->field($model, 'category_id')->dropDownList($model->categoriesList(), [
+                    'prompt' => '— свободная витрина (не привязана к категории) —',
+                ])->hint('Если выбрать категорию, её страница каталога будет показывать товары из этой витрины (порядок, фото, поля берутся отсюда).') ?>
             </div>
         </div>
     </div>

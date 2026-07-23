@@ -52,11 +52,10 @@ class ProductController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        $dataProvider = $this->products->getAllByCategory($category);
-
+        // Товары рендерит виджет витрины категории (тема): порядок/фото/поля из
+        // привязанной витрины, иначе — авто-грид категории (fallback).
         return $this->render('by-category', [
             'category' => $category,
-            'dataProvider' => $dataProvider,
         ]);
     }
 

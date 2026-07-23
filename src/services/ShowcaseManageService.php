@@ -12,8 +12,10 @@ use Besnovatyj\Catalog\entities\showcase\Showcase;
 use Besnovatyj\Catalog\entities\showcase\ShowcaseItem;
 use Besnovatyj\Catalog\forms\backend\showcase\ShowcaseForm;
 use Besnovatyj\Catalog\forms\backend\showcase\ShowcaseItemForm;
+use Besnovatyj\Catalog\readModels\ProductReadRepository;
 use Besnovatyj\Catalog\repositories\ProductRepository;
 use Besnovatyj\Catalog\repositories\ShowcaseRepository;
+use DomainException;
 use Throwable;
 use yii\db\Exception;
 
@@ -24,14 +26,17 @@ class ShowcaseManageService
 {
     private ShowcaseRepository $showcases;
     private ProductRepository $products;
+    private ProductReadRepository $productsRead;
 
     public function __construct(
         ShowcaseRepository $showcases,
         ProductRepository  $products,
+        ProductReadRepository $productsRead,
     )
     {
         $this->showcases = $showcases;
         $this->products = $products;
+        $this->productsRead = $productsRead;
     }
 
     /**
@@ -45,6 +50,7 @@ class ShowcaseManageService
             $form->code,
             $form->name,
             $form->sort,
+            $form->getCategoryId(),
         );
         $this->showcases->save($showcase);
         return $showcase;
@@ -59,7 +65,7 @@ class ShowcaseManageService
     public function edit(int $id, ShowcaseForm $form): void
     {
         $showcase = $this->showcases->get($id);
-        $showcase->edit($form->code, $form->name, $form->sort);
+        $showcase->edit($form->code, $form->name, $form->sort, $form->getCategoryId());
         $this->showcases->save($showcase);
     }
 
@@ -118,6 +124,51 @@ class ShowcaseManageService
         $item = ShowcaseItem::create($showcase->id, $productId, $maxSort + 1);
         $this->showcases->saveItem($item);
         return $item;
+    }
+
+    /**
+     * Дозаполнить витрину товарами привязанной категории.
+     *
+     * Добавляет как новые элементы только те активные товары категории, которых
+     * ещё нет в витрине; порядок и настройки уже существующих элементов не
+     * трогает (новые получают sort в конец).
+     *
+     * @param int $showcaseId
+     * @return int сколько товаров добавлено
+     * @throws Exception
+     */
+    public function syncFromCategory(int $showcaseId): int
+    {
+        $showcase = $this->showcases->get($showcaseId);
+        if ($showcase->category_id === null || $showcase->category === null) {
+            throw new DomainException('Витрина не привязана к категории.');
+        }
+
+        $existingIds = array_map('intval', ShowcaseItem::find()
+            ->select('product_id')
+            ->andWhere(['showcase_id' => $showcase->id])
+            ->column());
+
+        $maxSort = (int)ShowcaseItem::find()
+            ->andWhere(['showcase_id' => $showcase->id])
+            ->max('sort');
+
+        // Полный (без пагинации) набор товаров категории — тот же, что показывает
+        // страница категории в fallback-режиме.
+        $provider = $this->productsRead->getAllByCategory($showcase->category);
+        $provider->pagination = false;
+
+        $added = 0;
+        foreach ($provider->getModels() as $product) {
+            if (in_array((int)$product->id, $existingIds, true)) {
+                continue;
+            }
+            $item = ShowcaseItem::create($showcase->id, (int)$product->id, ++$maxSort);
+            $this->showcases->saveItem($item);
+            $added++;
+        }
+
+        return $added;
     }
 
     /**

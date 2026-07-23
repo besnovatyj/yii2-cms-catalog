@@ -46,6 +46,52 @@ class ShowcaseReadRepository
             return [];
         }
 
+        return $this->itemsOf($showcase);
+    }
+
+    /**
+     * Активная витрина, привязанная к категории (или null, если не задана).
+     *
+     * @param int $categoryId
+     * @return Showcase|null
+     */
+    public function findActiveByCategoryId(int $categoryId): ?Showcase
+    {
+        return Showcase::find()
+            ->andWhere([
+                'category_id' => $categoryId,
+                'status' => Showcase::STATUS_ACTIVE,
+            ])
+            ->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC])
+            ->one();
+    }
+
+    /**
+     * Элементы витрины, привязанной к категории. Если у категории нет активной
+     * витрины — пустой массив (вызывающий откатывается на авто-грид).
+     *
+     * @param int $categoryId
+     * @return ShowcaseItem[]
+     */
+    public function getItemsByCategoryId(int $categoryId): array
+    {
+        $showcase = $this->findActiveByCategoryId($categoryId);
+        if (!$showcase) {
+            return [];
+        }
+
+        return $this->itemsOf($showcase);
+    }
+
+    /**
+     * Активные элементы витрины с товаром (только активным), фото и главным фото,
+     * в ручном порядке (sort).
+     *
+     * @param Showcase $showcase
+     * @return ShowcaseItem[]
+     */
+    private function itemsOf(Showcase $showcase): array
+    {
         return ShowcaseItem::find()
             ->andWhere([
                 'showcase_id' => $showcase->id,

@@ -36,11 +36,14 @@ class m250428_123040_create_catalog_showcases_table extends BaseMigration
                 ->comment('Статус витрины'),
             'sort' => $this->integer(10)->notNull()->defaultValue(0)
                 ->comment('Сортировка'),
+            'category_id' => $this->integer()->null()
+                ->comment('Категория, страницу которой показывает эта витрина (null = свободная витрина)'),
         ], $this->tableOptions);
         $this->addCommentOnTable(static::TABLE_NAME, 'Витрины товаров');
 
         $this->createIndexes(static::TABLE_NAME, 'code', false, true);
         $this->createIndexes(static::TABLE_NAME, 'status');
+        $this->createIndexes(static::TABLE_NAME, 'category_id');
 
         parent::safeUp();
     }

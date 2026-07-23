@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Besnovatyj\Catalog\entities\showcase;
 
+use Besnovatyj\Catalog\entities\Category;
 use DomainException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -18,8 +19,10 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property int $status
  * @property int $sort
+ * @property int|null $category_id
  *
  * @property ShowcaseItem[] $items
+ * @property Category|null $category
  */
 class Showcase extends ActiveRecord
 {
@@ -30,9 +33,10 @@ class Showcase extends ActiveRecord
      * @param string $code
      * @param string $name
      * @param int $sort
+     * @param int|null $categoryId категория, страницу которой показывает витрина; null = свободная
      * @return self
      */
-    public static function create(string $code, string $name, int $sort = 0): self
+    public static function create(string $code, string $name, int $sort = 0, ?int $categoryId = null): self
     {
         if (trim($name) === '') {
             throw new DomainException('Showcase name cannot be empty.');
@@ -45,6 +49,7 @@ class Showcase extends ActiveRecord
         $showcase->code = $code;
         $showcase->name = $name;
         $showcase->sort = $sort;
+        $showcase->category_id = $categoryId;
         $showcase->status = self::STATUS_DRAFT;
         return $showcase;
     }
@@ -53,9 +58,10 @@ class Showcase extends ActiveRecord
      * @param string $code
      * @param string $name
      * @param int $sort
+     * @param int|null $categoryId категория, страницу которой показывает витрина; null = свободная
      * @return void
      */
-    public function edit(string $code, string $name, int $sort): void
+    public function edit(string $code, string $name, int $sort, ?int $categoryId = null): void
     {
         if (trim($name) === '') {
             throw new DomainException('Showcase name cannot be empty.');
@@ -67,6 +73,7 @@ class Showcase extends ActiveRecord
         $this->code = $code;
         $this->name = $name;
         $this->sort = $sort;
+        $this->category_id = $categoryId;
     }
 
     /**
@@ -115,6 +122,16 @@ class Showcase extends ActiveRecord
     public function getItems(): ActiveQuery
     {
         return $this->hasMany(ShowcaseItem::class, ['showcase_id' => 'id'])->orderBy(['sort' => SORT_ASC]);
+    }
+
+    /**
+     * Категория, к странице которой привязана витрина (null = свободная витрина).
+     *
+     * @return ActiveQuery
+     */
+    public function getCategory(): ActiveQuery
+    {
+        return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
 
     // </editor-fold>

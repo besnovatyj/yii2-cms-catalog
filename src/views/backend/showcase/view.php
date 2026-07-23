@@ -56,6 +56,15 @@ $this->registerJs("window.showcaseConfig = {$jsConfig};", View::POS_HEAD);
             'method' => 'post',
         ],
     ]) ?>
+    <?php if ($showcase->category_id !== null): ?>
+        <?= Html::a('Синхронизировать с категорией', ['sync-from-category', 'id' => $showcase->id], [
+            'class' => 'btn btn-outline-secondary',
+            'data' => [
+                'confirm' => 'Добавить в витрину все товары привязанной категории, которых в ней ещё нет? Порядок и настройки существующих элементов не изменятся.',
+                'method' => 'post',
+            ],
+        ]) ?>
+    <?php endif; ?>
 </p>
 
 <div class="row mb-3">
@@ -69,6 +78,12 @@ $this->registerJs("window.showcaseConfig = {$jsConfig};", View::POS_HEAD);
                     <tr><th>Название</th><td><?= Html::encode($showcase->name) ?></td></tr>
                     <tr><th>Статус</th><td><?= ShowcaseHelper::statusLabel($showcase->status) ?></td></tr>
                     <tr><th>Сортировка</th><td><?= $showcase->sort ?></td></tr>
+                    <tr>
+                        <th>Категория</th>
+                        <td><?= $showcase->category
+                                ? Html::encode($showcase->category->name)
+                                : '<span class="text-muted">не привязана (свободная витрина)</span>' ?></td>
+                    </tr>
                     <tr><th>Элементов</th><td id="showcase-items-count"><?= count($items) ?></td></tr>
                 </table>
             </div>
