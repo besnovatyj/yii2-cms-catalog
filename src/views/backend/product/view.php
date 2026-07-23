@@ -22,8 +22,8 @@ use yii\widgets\DetailView;
 
 $urlManager = Yii::$app->get('frontendUrlManager'); // TODO
 
-$this->title = html_entity_decode($product->name_short, ENT_QUOTES | ENT_HTML5, 'UTF-8')
-            ?? html_entity_decode($product->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+$this->title = html_entity_decode($product->name_short ?? "", ENT_QUOTES | ENT_HTML5, 'UTF-8')
+    ?? html_entity_decode($product->name ?? "", ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $this->params['breadcrumbs'][] = ['label' => 'Products', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -140,12 +140,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card-header"></div>
     <div class="card-body">
         <?= Widget::widget([
-            'ownerId'   => $product->id,
+            'ownerId' => $product->id,
             'endpoints' => [
-                'getImages'    => Url::to(['/Catalog/backend/product/get-images'], true),
-                'setNewSort'   => Url::to(['/Catalog/backend/product/set-new-sort'], true),
-                'upload'       => Url::to(['/Catalog/backend/product/add-image'], true),
-                'deleteImage'  => Url::to(['/Catalog/backend/product/delete-image'], true),
+                'getImages' => Url::to(['/Catalog/backend/product/get-images'], true),
+                'setNewSort' => Url::to(['/Catalog/backend/product/set-new-sort'], true),
+                'upload' => Url::to(['/Catalog/backend/product/add-image'], true),
+                'deleteImage' => Url::to(['/Catalog/backend/product/delete-image'], true),
                 'setMainImage' => Url::to(['/Catalog/backend/product/set-main-image'], true),
             ],
         ]) ?>

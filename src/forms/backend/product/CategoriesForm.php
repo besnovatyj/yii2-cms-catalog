@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 class CategoriesForm extends BaseForm
 {
     public int|null $main = null;
-    public array $others = [];
+    public array|string $others = []; // TODO - Если не заполнять, то из html формы прилетает пустая строка. А так вообще только массив
 
     public function __construct(?Product $product = null, $config = [])
     {
