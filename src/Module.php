@@ -7,6 +7,8 @@
 namespace Besnovatyj\Catalog;
 
 use Besnovatyj\Kernel\module\CmsModule;
+use Besnovatyj\Contracts\dashboard\DashboardWidgetDescriptor;
+use Besnovatyj\Contracts\dashboard\ProvidesDashboardWidgets;
 use Besnovatyj\Contracts\module\DeclaresModule;
 use Besnovatyj\Contracts\module\ProvidesAdminMenu;
 use Besnovatyj\Contracts\module\ProvidesBootstrap;
@@ -14,11 +16,13 @@ use Besnovatyj\Contracts\module\ProvidesDependencies;
 use Besnovatyj\Contracts\module\ProvidesDirectories;
 use Besnovatyj\Contracts\module\ProvidesMigrations;
 use Besnovatyj\Contracts\module\ProvidesOptions;
+use Besnovatyj\Catalog\widgets\dashboard\ProductsCountTile;
 
 class Module  extends CmsModule implements
     DeclaresModule, ProvidesAdminMenu, ProvidesBootstrap,
     ProvidesDependencies,  ProvidesDirectories,
-    ProvidesMigrations, ProvidesOptions
+    ProvidesMigrations, ProvidesOptions,
+    ProvidesDashboardWidgets
 {
     public const bool EDITABLE = true;
     public const string VERSION = '1.0.0';
@@ -35,5 +39,19 @@ class Module  extends CmsModule implements
     public static function migrationNamespace(): ?string { return __NAMESPACE__.'\\migrations'; }
     public static function directories(): array { return ['@static/origin/Catalog','@static/cache/Catalog'];}
     public static function bootstrapClasses(): array { return [Bootstrap::class]; }
+
+    /** @return DashboardWidgetDescriptor[] */
+    public static function dashboardWidgets(): array
+    {
+        return [
+            new DashboardWidgetDescriptor(
+                id: self::MODULE_ID . '.productsCount',
+                title: 'Товары',
+                tileClass: ProductsCountTile::class,
+                iconClass: 'bi bi-box-seam',
+                priority: 200,
+            ),
+        ];
+    }
 
 }
