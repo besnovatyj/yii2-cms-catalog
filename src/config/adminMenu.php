@@ -89,27 +89,6 @@ return [
         ],
     ],
 
-    // Tags
-    [
-        'label' => 'Tags',
-        'iconClass' => 'bi bi-tags me-1',
-        'url' => ['/Catalog/backend/tag/index'],
-        'active' => static function () {
-            return str_contains(\Yii::$app->request->url, 'Catalog/backend/tag');
-        },
-        '_meta' => [
-            'placements' => [
-                [
-                    'location'      => 'left-sidebar',
-                    'group'         => 'Catalog',
-                    'groupIcon'     => 'bi bi-journals',
-                    'priority'      => 100,
-                    'groupPriority' => 100,
-                ],
-            ],
-        ],
-    ],
-
     // Showcases
     [
         'label' => 'Showcases',

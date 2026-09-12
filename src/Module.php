@@ -16,13 +16,17 @@ use Besnovatyj\Contracts\module\ProvidesDependencies;
 use Besnovatyj\Contracts\module\ProvidesDirectories;
 use Besnovatyj\Contracts\module\ProvidesMigrations;
 use Besnovatyj\Contracts\module\ProvidesOptions;
+use Besnovatyj\Contracts\tags\TaggableProvider;
+use Besnovatyj\Contracts\tags\TagSource;
+use Besnovatyj\Catalog\entities\product\Product;
+use Besnovatyj\Catalog\readModels\ProductReadRepository;
 use Besnovatyj\Catalog\widgets\dashboard\ProductsCountTile;
 
 class Module  extends CmsModule implements
     DeclaresModule, ProvidesAdminMenu, ProvidesBootstrap,
     ProvidesDependencies,  ProvidesDirectories,
     ProvidesMigrations, ProvidesOptions,
-    ProvidesDashboardWidgets
+    ProvidesDashboardWidgets, TaggableProvider
 {
     public const bool EDITABLE = true;
     public const string VERSION = '1.0.0';
@@ -54,4 +58,38 @@ class Module  extends CmsModule implements
         ];
     }
 
+    /**
+     * Товары — участники общего словаря тегов. Реализация {@see TaggableProvider}; вызывается модулем
+     * тегов для страницы `/tag/<slug>` и облака.
+     *
+     * @return TagSource[]
+     */
+    public function tagSources(): array
+    {
+        return [
+            new TagSource(Product::tagType(), 'Товары', 'bi bi-box-seam'),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visibleTaggedIds(string $type, array $ids): array
+    {
+        return match ($type) {
+            Product::tagType() => new ProductReadRepository()->visibleIds($ids),
+            default => [],
+        };
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function taggedItems(string $type, array $ids): iterable
+    {
+        return match ($type) {
+            Product::tagType() => new ProductReadRepository()->taggedItems($ids),
+            default => [],
+        };
+    }
 }

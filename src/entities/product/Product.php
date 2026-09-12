@@ -9,7 +9,9 @@ namespace Besnovatyj\Catalog\entities\product;
 use Besnovatyj\Catalog\entities\Brand;
 use Besnovatyj\Catalog\entities\Category;
 use Besnovatyj\Catalog\entities\product\queries\ProductQuery;
-use Besnovatyj\Catalog\entities\Tag;
+use Besnovatyj\Tags\entities\Tag;
+use Besnovatyj\Tags\entities\TagAssignment;
+use Besnovatyj\Tags\entities\TaggableEntityTrait;
 use Besnovatyj\DomainEvents\AggregateRoot;
 use Besnovatyj\DomainEvents\EventTrait;
 use Besnovatyj\Helpers\FilesystemHelper;
@@ -58,6 +60,7 @@ use yii\db\ActiveRecord;
 class Product extends ActiveRecord implements AggregateRoot
 {
     use EventTrait;
+    use TaggableEntityTrait;
 
     public const int STATUS_DRAFT = 0;
     public const int STATUS_ACTIVE = 1;
@@ -250,14 +253,13 @@ class Product extends ActiveRecord implements AggregateRoot
         return $this->hasMany(Category::class, ['id' => 'category_id'])->via('categoryAssignments');
     }
 
-    public function getTagAssignments(): ActiveQuery
+    /**
+     * Ключ товара в общем словаре тегов (модуль Tags) — единый ключ сущности для сквозных модулей.
+     * Связи `tagAssignments`/`tags` даёт {@see TaggableEntityTrait}.
+     */
+    public static function tagType(): string
     {
-        return $this->hasMany(TagAssignment::class, ['product_id' => 'id']);
-    }
-
-    public function getTags(): ActiveQuery
-    {
-        return $this->hasMany(Tag::class, ['id' => 'tag_id'])->via('tagAssignments');
+        return 'catalog.product';
     }
 
     public function getPhotos(): ActiveQuery

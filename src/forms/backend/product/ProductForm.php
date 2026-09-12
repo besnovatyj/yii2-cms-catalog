@@ -10,6 +10,7 @@ use Besnovatyj\Catalog\entities\Brand;
 use Besnovatyj\Catalog\entities\product\Product;
 use Besnovatyj\Forms\CompositeForm;
 use Besnovatyj\Meta\MetaForm;
+use Besnovatyj\Tags\forms\backend\TagsForm;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -45,7 +46,7 @@ class ProductForm extends CompositeForm
             $this->weight = $product->weight;
             $this->metaForm = new MetaForm($product->meta);
             $this->categoriesForm = new CategoriesForm($product);
-            $this->tagsForm = new TagsForm($product);
+            $this->tagsForm = new TagsForm($product->tags);
             $this->_product = $product;
         } else {
             $this->metaForm = new MetaForm();

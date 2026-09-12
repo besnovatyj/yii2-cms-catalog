@@ -9,7 +9,8 @@ namespace Besnovatyj\Catalog\readModels;
 use Besnovatyj\Catalog\entities\Brand;
 use Besnovatyj\Catalog\entities\Category;
 use Besnovatyj\Catalog\entities\product\Product;
-use Besnovatyj\Catalog\entities\Tag;
+use Besnovatyj\Contracts\tags\TaggedItem;
+use Besnovatyj\Tags\entities\Tag;
 use Besnovatyj\TreeManager\Manager\TreeQueryScope;
 use yii\data\ActiveDataProvider;
 use yii\data\DataProviderInterface;
@@ -65,6 +66,54 @@ class ProductReadRepository
     public function find($id): ?Product
     {
         return Product::find()->active()->andWhere(['id' => $id])->one();
+    }
+
+    /**
+     * Из переданных id — товары, доступные анониму (для счётчиков страницы тега и облака).
+     *
+     * @param int[] $ids
+     * @return int[]
+     */
+    public function visibleIds(array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+        return array_map('intval', Product::find()->alias('p')->active('p')->andWhere(['p.id' => $ids])->select('p.id')->column());
+    }
+
+    /**
+     * Карточки товаров для страницы тега модуля Tags — только активные, в порядке `$ids`.
+     *
+     * @param int[] $ids
+     * @return iterable<TaggedItem>
+     */
+    public function taggedItems(array $ids): iterable
+    {
+        if ($ids === []) {
+            return;
+        }
+
+        /** @var Product[] $products */
+        $products = Product::find()->alias('p')->active('p')->with('mainPhoto')->andWhere(['p.id' => $ids])->indexBy('id')->all();
+
+        foreach ($ids as $id) {
+            $product = $products[$id] ?? null;
+            if ($product === null) {
+                continue;
+            }
+            yield new TaggedItem(
+                type: Product::tagType(),
+                entityId: (int)$product->id,
+                route: '/Catalog/product/item',
+                params: ['id' => (int)$product->id],
+                title: (string)$product->name,
+                excerpt: $product->description_short !== null && $product->description_short !== '' ? (string)$product->description_short : null,
+                // `created_at` — TIMESTAMP-колонка, контракт ждёт Unix-timestamp: только strtotime().
+                date: $product->created_at === null ? null : (strtotime((string)$product->created_at) ?: null),
+                image: $product->mainPhoto?->getThumbUrl('file', 'catalog_list'),
+            );
+        }
     }
 
     private function getProvider(ActiveQuery $query): ActiveDataProvider

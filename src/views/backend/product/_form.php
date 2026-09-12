@@ -114,7 +114,7 @@ use yii\web\View;
             <div class="card-header">Tags</div>
             <div class="card-body">
                 <?= $form->field($model->tagsForm, 'newTagsNames')->widget(\Besnovatyj\Select2\Select2Widget::class, [
-                    'endpoint' => \yii\helpers\Url::to(['/Catalog/backend/tag/search-endpoint'], true),
+                    'endpoint' => \yii\helpers\Url::to(['/Tags/backend/tag/search-endpoint'], true), // общий словарь тегов (модуль Tags)
 //                        'options' => ['class' => 'form-control'],
                     'options' => ['class' => ''],
                 ]) ?>

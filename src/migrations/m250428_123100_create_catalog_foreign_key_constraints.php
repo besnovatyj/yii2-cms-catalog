@@ -71,23 +71,7 @@ class m250428_123100_create_catalog_foreign_key_constraints extends BaseMigratio
             'RESTRICT',
         );
 
-        // catalog_tag_assignments
-        $this->createFKs(
-            m250428_123010_create_catalog_tag_assignments_table::TABLE_NAME,
-            'product_id',
-            m250428_122930_create_catalog_products_table::TABLE_NAME,
-            'id',
-            'CASCADE',
-            'RESTRICT',
-        );
-        $this->createFKs(
-            m250428_123010_create_catalog_tag_assignments_table::TABLE_NAME,
-            'tag_id',
-            m250428_122850_create_catalog_tags_table::TABLE_NAME,
-            'id',
-            'CASCADE',
-            'RESTRICT',
-        );
+        // Теги — в общем модуле Tags (полиморфная таблица связей без FK на товары), здесь их больше нет.
 
         // catalog_related_assignments
         $this->createFKs(

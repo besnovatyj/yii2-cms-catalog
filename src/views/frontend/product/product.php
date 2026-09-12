@@ -79,7 +79,7 @@ $this->params['active_category'] = $product->category;
             <li>
                 Tags:
                 <?php foreach ($product->tags as $tag): ?>
-                    <a href="<?= Html::encode(Url::to(['tag', 'id' => $tag->id])) ?>"><?= Html::encode($tag->name) ?></a>
+                    <a href="<?= Html::encode(Url::to(['/Tags/tag/view', 'slug' => $tag->slug])) ?>"><?= Html::encode($tag->name) ?></a>
                 <?php endforeach; ?>
             </li>
             <li>Product Code: <?= Html::encode($product->code) ?></li>

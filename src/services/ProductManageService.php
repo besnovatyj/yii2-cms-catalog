@@ -15,6 +15,7 @@ use Besnovatyj\Catalog\repositories\CategoryRepository;
 use Besnovatyj\Catalog\repositories\ProductRepository;
 use Besnovatyj\DomainEvents\TransactionManager;
 use Besnovatyj\Meta\Meta;
+use Besnovatyj\Tags\services\TagAssigner;
 use Throwable;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
@@ -28,7 +29,8 @@ class ProductManageService
     private BrandRepository $brands;
     private CategoryRepository $categories;
     private ProductCategoryService $categoryService;
-    private ProductTagService $tagService;
+    /** Теги — общий словарь модуля Tags: связи пишет только он, slug из имени выводит его форма. */
+    private TagAssigner $tagService;
     private TransactionManager $transaction;
 
     public function __construct(
@@ -36,7 +38,7 @@ class ProductManageService
         BrandRepository              $brands,
         CategoryRepository           $categories,
         ProductCategoryService       $categoryService,
-        ProductTagService            $tagService,
+        TagAssigner                  $tagService,
         TransactionManager           $transaction
     )
     {
@@ -78,7 +80,7 @@ class ProductManageService
             $this->products->save($product);
 
             $this->categoryService->assign($product, $form->categoriesForm->others);
-            $this->tagService->assign($product, $form->tagsForm->newTagsNames);
+            $this->tagService->sync(Product::tagType(), (int)$product->id, $form->tagsForm->items);
 
         });
         return $product;
@@ -116,10 +118,9 @@ class ProductManageService
             $this->products->save($product);
 
             $this->categoryService->revoke($product);
-            $this->tagService->revoke($product);
 
             $this->categoryService->assign($product, $form->categoriesForm->others);
-            $this->tagService->assign($product, $form->tagsForm->newTagsNames);
+            $this->tagService->sync(Product::tagType(), (int)$product->id, $form->tagsForm->items);
 
         });
     }
@@ -154,7 +155,8 @@ class ProductManageService
 
         $this->transaction->wrap(function () use ($product) {
             $this->categoryService->revoke($product);
-            $this->tagService->revoke($product);
+            // Внешнего ключа на товар у общих связей тегов нет — снимаем явно, иначе останутся сироты.
+            $this->tagService->detachAll(Product::tagType(), (int)$product->id);
             $this->products->remove($product);
         });
     }
