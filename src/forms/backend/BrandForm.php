@@ -51,7 +51,7 @@ class BrandForm extends CompositeForm
         return [
             [['name'], 'required'],
             [['name', 'slug'], 'string', 'max' => 255],
-            ['slug', SlugValidator::class],
+            ['slug', SlugValidator::class, 'allowLeadingDigit' => true],
             [['name', 'slug'], 'unique', 'targetClass' => Brand::class, 'filter' => $this->_brand ? ['<>', 'id', $this->_brand->id] : null]
         ];
     }
