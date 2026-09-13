@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 use Besnovatyj\Catalog\Module;
-use Besnovatyj\Catalog\urls\CategoryUrlRule;
+use Besnovatyj\Validators\SlugValidator;
 
 /**
  * Yii2-конфиг модуля для движка yiisoft/config (группа `common` — общий для всех приложений).
@@ -16,10 +16,7 @@ use Besnovatyj\Catalog\urls\CategoryUrlRule;
  * Содержит регистрацию модуля. Меню (adminMenu) и миграции остаются вкладами modman. Значения берутся
  * из статических методов {@see Module} — единый источник, без дублирования.
  *
- * URL-правила — вклад в компонент `frontendUrlManager` (группа `common`, см. README_Yii2_Modules.md).
- * ЧПУ дерева категорий реализовано классом-правилом {@see CategoryUrlRule} (UrlRuleInterface) — он
- * DI-конструируется контейнером. Для класс-правил обязателен `frontendUrlManager.cache = false`
- * (см. common/config/components.php). Строковые правила капитализированы под id модуля 'Catalog'.
+ * Строковые правила капитализированы под id модуля 'Catalog'.
  *
  * ВНИМАНИЕ: frontend-контроллёры каталога (CategoryController/ProductController) сейчас заглушки —
  * маршруты объявлены, но экшены надо реализовать.
@@ -35,12 +32,12 @@ return [
     'components' => [
         'frontendUrlManager' => [
             'rules' => [
-                'catalog'                => 'Catalog/category/index',
-                //['class' => CategoryUrlRule::class], // catalog/<slug-путь дерева> ↔ Catalog/category/view
-                'catalog/<id:\d+>'       => 'Catalog/product/view',
+                // Роуты — по реальным экшенам ProductController (index / item / by-category); прежние
+                // 'Catalog/category/index' и 'Catalog/product/view' не существовали.
+                'catalog'                                           => 'Catalog/product/index',
+                'catalog/<id:\d+>'                                  => 'Catalog/product/item',
+                'catalog/<slug:' . SlugValidator::SLUG_STRICT . '>' => 'Catalog/product/by-category',
             ],
         ],
     ],
-    // L2-bootstrap: инвалидация кэша ЧПУ-путей категорий при правках дерева (см. Bootstrap).
-    'bootstrap' => array_values(Module::bootstrapClasses()),
 ];

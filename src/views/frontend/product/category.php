@@ -22,7 +22,7 @@ $this->registerMetaTag(['name' =>'keywords', 'content' => $category->meta->keywo
 $this->params['breadcrumbs'][] = ['label' => 'Catalog', 'url' => ['index']];
 foreach ($category->parents as $parent) {
     if (!$parent->isRoot()) {
-        $this->params['breadcrumbs'][] = ['label' => $parent->name, 'url' => ['category', 'id' => $parent->id]];
+        $this->params['breadcrumbs'][] = ['label' => $parent->name, 'url' => ['by-category', 'slug' => $parent->slug]];
     }
 }
 $this->params['breadcrumbs'][] = $category->name;

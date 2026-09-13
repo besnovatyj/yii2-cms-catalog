@@ -21,10 +21,10 @@ $this->registerMetaTag(['name' =>'keywords', 'content' => $product->meta->keywor
 $this->params['breadcrumbs'][] = ['label' => 'Catalog', 'url' => ['index']];
 foreach ($product->category->parents as $parent) {
     if (!$parent->isRoot()) {
-        $this->params['breadcrumbs'][] = ['label' => $parent->name, 'url' => ['category', 'id' => $parent->id]];
+        $this->params['breadcrumbs'][] = ['label' => $parent->name, 'url' => ['by-category', 'slug' => $parent->slug]];
     }
 }
-$this->params['breadcrumbs'][] = ['label' => $product->category->name, 'url' => ['category', 'id' => $product->category->id]];
+$this->params['breadcrumbs'][] = ['label' => $product->category->name, 'url' => ['by-category', 'slug' => $product->category->slug]];
 $this->params['breadcrumbs'][] = $product->name;
 
 $this->params['active_category'] = $product->category;
