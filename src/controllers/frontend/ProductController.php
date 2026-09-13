@@ -6,6 +6,7 @@
 
 namespace Besnovatyj\Catalog\controllers\frontend;
 
+use Besnovatyj\Catalog\readModels\BrandReadRepository;
 use Besnovatyj\Catalog\readModels\CategoryReadRepository;
 use Besnovatyj\Catalog\readModels\ProductReadRepository;
 use yii\web\Controller;
@@ -15,18 +16,21 @@ class ProductController extends Controller
 {
     private ProductReadRepository $products;
     private CategoryReadRepository $categories;
+    private BrandReadRepository $brands;
 
     public function __construct(
         $id,
         $module,
         ProductReadRepository $products,
         CategoryReadRepository $categories,
+        BrandReadRepository $brands,
         $config = []
     )
     {
         parent::__construct($id, $module, $config);
         $this->products = $products;
         $this->categories = $categories;
+        $this->brands = $brands;
     }
 
     /**
@@ -53,9 +57,28 @@ class ProductController extends Controller
         }
 
         // Товары рендерит виджет витрины категории (тема): порядок/фото/поля из
-        // привязанной витрины, иначе — авто-грид категории (fallback).
+        // привязанной витрины, иначе — авто-грид категории (fallback). Провайдер ленивый:
+        // запрос уйдёт в базу, только если вьюха (демо в пакете) его действительно переберёт.
         return $this->render('by-category', [
             'category' => $category,
+            'dataProvider' => $this->products->getAllByCategory($category),
+        ]);
+    }
+
+    /**
+     * Товары бренда (`catalog/brand/<slug>`); вьюха `brand.php` ждёт `brand` и `dataProvider`.
+     *
+     * @throws NotFoundHttpException
+     */
+    public function actionBrand(string $slug): string
+    {
+        if (!$brand = $this->brands->findBySlug($slug)) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        return $this->render('brand', [
+            'brand' => $brand,
+            'dataProvider' => $this->products->getAllByBrand($brand),
         ]);
     }
 

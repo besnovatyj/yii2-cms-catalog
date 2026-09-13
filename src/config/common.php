@@ -35,6 +35,8 @@ return [
                 // Роуты — по реальным экшенам ProductController (index / item / by-category); прежние
                 // 'Catalog/category/index' и 'Catalog/product/view' не существовали.
                 'catalog'                                           => 'Catalog/product/index',
+                // Бренд — в своём сегменте, с <id> не конкурирует: слаг ANY (как у BrandForm).
+                'catalog/brand/<slug:' . SlugValidator::SLUG_ANY . '>' => 'Catalog/product/brand',
                 'catalog/<id:\d+>'                                  => 'Catalog/product/item',
                 'catalog/<slug:' . SlugValidator::SLUG_STRICT . '>' => 'Catalog/product/by-category',
             ],

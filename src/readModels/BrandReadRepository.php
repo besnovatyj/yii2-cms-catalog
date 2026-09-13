@@ -14,4 +14,12 @@ class BrandReadRepository
     {
         return Brand::findOne($id);
     }
+
+    /**
+     * Бренд по слагу — адрес страницы бренда `catalog/brand/<slug>`.
+     */
+    public function findBySlug(string $slug): ?Brand
+    {
+        return Brand::findOne(['slug' => $slug]);
+    }
 }
